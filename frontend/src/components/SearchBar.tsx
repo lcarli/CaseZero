@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface SearchBarProps {
   searchTerm: string;
@@ -9,8 +10,11 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({ 
   searchTerm, 
   onSearchChange, 
-  placeholder = "Rechercher une affaire..." 
+  placeholder 
 }) => {
+  const { t } = useTranslation();
+  const finalPlaceholder = placeholder || t('search.placeholder');
+  
   return (
     <div className="relative">
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -28,7 +32,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         value={searchTerm}
         onChange={(e) => onSearchChange(e.target.value)}
         className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-        placeholder={placeholder}
+        placeholder={finalPlaceholder}
       />
       {searchTerm && (
         <div className="absolute inset-y-0 right-0 pr-3 flex items-center">

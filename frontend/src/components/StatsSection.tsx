@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface StatsCardProps {
   title: string;
@@ -51,12 +52,14 @@ const StatsSection: React.FC<StatsSectionProps> = ({
   tutorialCases, 
   averageDifficulty 
 }) => {
+  const { t } = useTranslation();
+  
   return (
     <div className="mb-8">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Statistiques</h3>
+      <h3 className="text-lg font-medium text-gray-900 mb-4">{t('stats.title')}</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <StatsCard
-          title="Total des affaires"
+          title={t('stats.totalCases')}
           value={totalCases}
           icon={
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,7 +70,7 @@ const StatsSection: React.FC<StatsSectionProps> = ({
         />
         
         <StatsCard
-          title="Affaires tutoriel"
+          title={t('stats.tutorialCases')}
           value={tutorialCases}
           icon={
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,7 +83,7 @@ const StatsSection: React.FC<StatsSectionProps> = ({
         />
         
         <StatsCard
-          title="Difficulté moyenne"
+          title={t('stats.averageDifficulty')}
           value={`${averageDifficulty.toFixed(1)}/5`}
           icon={
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
