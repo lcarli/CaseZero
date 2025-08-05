@@ -19,7 +19,7 @@ Content-Type: application/json
 
 {
   "email": "admin@casezero.com",
-  "password": "Admin123!"
+  "password": "CaseZero123!"
 }
 
 ### 3. Login com usuário detective
@@ -195,13 +195,13 @@ Content-Type: application/json
 }
 
 ### 24. Desativar usuário (Admin only)
-DELETE http://localhost:5030/api/users/2
+DELETE http://localhost:5029/api/users/2
 Authorization: Bearer {{admin_token}}
 
 ### === INVESTIGATION SESSION ENDPOINTS ===
 
 ### 25. Iniciar nova sessão de investigação
-POST http://localhost:5030/api/investigationsession/start
+POST http://localhost:5029/api/investigationsession/start
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -211,15 +211,15 @@ Content-Type: application/json
 }
 
 ### 26. Listar minhas sessões de investigação
-GET http://localhost:5030/api/investigationsession/my-sessions
+GET http://localhost:5029/api/investigationsession/my-sessions
 Authorization: Bearer {{token}}
 
 ### 27. Obter sessão específica
-GET http://localhost:5030/api/investigationsession/1
+GET http://localhost:5029/api/investigationsession/1
 Authorization: Bearer {{token}}
 
 ### 28. Atualizar progresso da sessão
-PUT http://localhost:5030/api/investigationsession/1/progress
+PUT http://localhost:5029/api/investigationsession/1/progress
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -232,7 +232,7 @@ Content-Type: application/json
 }
 
 ### 29. Finalizar sessão de investigação
-POST http://localhost:5030/api/investigationsession/1/end
+POST http://localhost:5029/api/investigationsession/1/end
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -242,46 +242,18 @@ Content-Type: application/json
 }
 
 ### 30. Listar todas as sessões (Admin/Supervisor only)
-GET http://localhost:5030/api/investigationsession
+GET http://localhost:5029/api/investigationsession
 Authorization: Bearer {{admin_token}}
 
 ### 31. Listar sessões por caso (Admin/Supervisor only)
-GET http://localhost:5030/api/investigationsession/case/1
+GET http://localhost:5029/api/investigationsession/case/1
 Authorization: Bearer {{admin_token}}
 
 ### 32. Obter estatísticas das sessões (Admin/Supervisor only)
-GET http://localhost:5030/api/investigationsession/statistics
+GET http://localhost:5029/api/investigationsession/statistics
 Authorization: Bearer {{admin_token}}
 
 ### === VARIABLES FOR TESTING ===
-# Após fazer login com admin, copie o token para usar nos endpoints protegidos
+# Après faire login avec admin, copie le token pour usar nos endpoints protegidos
 # @admin_token = YOUR_ADMIN_TOKEN_HERE
 # @token = YOUR_USER_TOKEN_HERE
-
-{
-  "title": "Roubo na Joalheria Central",
-  "titleEn": "Central Jewelry Store Robbery",
-  "description": "Uma joalheria foi assaltada no centro da cidade.",
-  "descriptionEn": "A jewelry store was robbed in the city center.",
-  "type": 1,
-  "difficulty": 2,
-  "status": 1,
-  "estimatedTimeMinutes": 45,
-  "isPublished": true,
-  "isTutorial": false,
-  "location": "Rua das Flores, 123",
-  "locationEn": "Flores Street, 123",
-  "tags": "robbery,jewelry,city-center"
-}
-
-### 8. Tentar deletar caso sem permissão (deve falhar)
-DELETE http://localhost:5029/api/cases/1
-Authorization: Bearer {{detective_token}}
-
-### 9. Deletar caso com permissão de admin
-DELETE http://localhost:5029/api/cases/2
-Authorization: Bearer {{admin_token}}
-
-### 10. Logout
-POST http://localhost:5029/api/auth/logout
-Authorization: Bearer {{token}}

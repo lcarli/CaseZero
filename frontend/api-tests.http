@@ -1,0 +1,40 @@
+### Test de connexion
+POST http://localhost:5030/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@casezero.com",
+  "password": "CaseZero123!"
+}
+
+### Test récupération des utilisateurs (avec token)
+GET http://localhost:5030/api/users
+Authorization: Bearer {{token}}
+
+### Test récupération des affaires
+GET http://localhost:5030/api/cases
+Authorization: Bearer {{token}}
+
+### Test récupération d'une affaire spécifique
+GET http://localhost:5030/api/cases/1
+Authorization: Bearer {{token}}
+
+### Test récupération des preuves d'une affaire
+GET http://localhost:5030/api/evidence/case/1
+Authorization: Bearer {{token}}
+
+### Test récupération des sessions d'une affaire
+GET http://localhost:5030/api/sessions/case/1
+Authorization: Bearer {{token}}
+
+### Test de création de session
+POST http://localhost:5030/api/sessions
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "caseId": 1,
+  "userId": 1,
+  "startedAt": "2024-01-20T10:00:00Z",
+  "status": 1
+}

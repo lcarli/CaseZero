@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using CaseZero.Infrastructure.Data;
 using CaseZero.Core.Entities;
 using CaseZero.Core.Enums;
+using CaseZero.Core.DTOs;
+using CaseZero.Core.Services;
 using CaseZero.Api.Attributes;
 
 namespace CaseZero.Api.Controllers;
@@ -27,7 +29,7 @@ public class EvidenceController : ControllerBase
     /// </summary>
     [HttpGet("case/{caseId}")]
     [DetectiveAndAbove]
-    public async Task<ActionResult<IEnumerable<Evidence>>> GetEvidenceByCase(int caseId)
+    public async Task<ActionResult<IEnumerable<EvidenceDto>>> GetEvidenceByCase(int caseId)
     {
         // Verify case exists and user has access
         var @case = await _context.Cases
@@ -38,12 +40,14 @@ public class EvidenceController : ControllerBase
             return NotFound("Case not found or not published");
         }
 
-        var evidence = await _context.Evidences
+        var evidences = await _context.Evidences
+            .Include(e => e.Case)
             .Where(e => e.CaseId == caseId)
-            .OrderBy(e => e.EvidenceId)
+            .OrderBy(e => e.EvidenceNumber)
             .ToListAsync();
 
-        return Ok(evidence);
+        var evidenceDtos = evidences.Select(MappingService.ToDto).ToList();
+        return Ok(evidenceDtos);
     }
 
     /// <summary>
@@ -51,7 +55,7 @@ public class EvidenceController : ControllerBase
     /// </summary>
     [HttpGet("{id}")]
     [DetectiveAndAbove]
-    public async Task<ActionResult<Evidence>> GetEvidence(int id)
+    public async Task<ActionResult<EvidenceDto>> GetEvidence(int id)
     {
         var evidence = await _context.Evidences
             .Include(e => e.Case)
@@ -68,7 +72,8 @@ public class EvidenceController : ControllerBase
             return NotFound("Case not found or not published");
         }
 
-        return Ok(evidence);
+        var evidenceDto = MappingService.ToDto(evidence);
+        return Ok(evidenceDto);
     }
 
     /// <summary>
@@ -76,44 +81,29 @@ public class EvidenceController : ControllerBase
     /// </summary>
     [HttpPost]
     [AnalystAndAbove]
-    public async Task<ActionResult<Evidence>> CreateEvidence([FromBody] CreateEvidenceRequest request)
+    public async Task<ActionResult<EvidenceDto>> CreateEvidence([FromBody] CreateEvidenceDto createEvidenceDto)
     {
         // Verify case exists
-        var @case = await _context.Cases.FindAsync(request.CaseId);
+        var @case = await _context.Cases.FindAsync(createEvidenceDto.CaseId);
         if (@case == null)
         {
             return BadRequest("Case not found");
         }
 
-        var evidence = new Evidence
-        {
-            CaseId = request.CaseId,
-            EvidenceNumber = request.EvidenceNumber,
-            Name = request.Name,
-            NameEn = request.NameEn,
-            Description = request.Description,
-            DescriptionEn = request.DescriptionEn,
-            Type = request.Type,
-            Category = request.Category,
-            Location = request.Location,
-            LocationEn = request.LocationEn,
-            CollectedAt = request.CollectedAt ?? DateTime.UtcNow,
-            CollectedBy = request.CollectedBy,
-            CollectedByEn = request.CollectedByEn,
-            FilePath = request.FilePath,
-            Content = request.Content,
-            ContentEn = request.ContentEn,
-            IsAvailable = request.IsAvailable,
-            RequiresAnalysis = request.RequiresAnalysis,
-            Tags = request.Tags
-        };
+        var evidence = MappingService.ToEntity(createEvidenceDto);
 
         _context.Evidences.Add(evidence);
         await _context.SaveChangesAsync();
 
+        // Load the evidence with case info for DTO conversion
+        await _context.Entry(evidence)
+            .Reference(e => e.Case)
+            .LoadAsync();
+
         _logger.LogInformation("Evidence {EvidenceId} created for case {CaseId}", evidence.EvidenceId, evidence.CaseId);
 
-        return CreatedAtAction(nameof(GetEvidence), new { id = evidence.EvidenceId }, evidence);
+        var evidenceDto = MappingService.ToDto(evidence);
+        return CreatedAtAction(nameof(GetEvidence), new { id = evidence.EvidenceId }, evidenceDto);
     }
 
     /// <summary>
@@ -121,7 +111,7 @@ public class EvidenceController : ControllerBase
     /// </summary>
     [HttpPut("{id}")]
     [AnalystAndAbove]
-    public async Task<IActionResult> UpdateEvidence(int id, [FromBody] UpdateEvidenceRequest request)
+    public async Task<IActionResult> UpdateEvidence(int id, [FromBody] UpdateEvidenceDto updateEvidenceDto)
     {
         var evidence = await _context.Evidences.FindAsync(id);
         if (evidence == null)
@@ -129,23 +119,7 @@ public class EvidenceController : ControllerBase
             return NotFound();
         }
 
-        evidence.EvidenceNumber = request.EvidenceNumber;
-        evidence.Name = request.Name;
-        evidence.NameEn = request.NameEn;
-        evidence.Description = request.Description;
-        evidence.DescriptionEn = request.DescriptionEn;
-        evidence.Type = request.Type;
-        evidence.Category = request.Category;
-        evidence.Location = request.Location;
-        evidence.LocationEn = request.LocationEn;
-        evidence.CollectedBy = request.CollectedBy;
-        evidence.CollectedByEn = request.CollectedByEn;
-        evidence.FilePath = request.FilePath;
-        evidence.Content = request.Content;
-        evidence.ContentEn = request.ContentEn;
-        evidence.IsAvailable = request.IsAvailable;
-        evidence.RequiresAnalysis = request.RequiresAnalysis;
-        evidence.Tags = request.Tags;
+        MappingService.UpdateEntity(evidence, updateEvidenceDto);
 
         try
         {

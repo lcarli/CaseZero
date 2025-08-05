@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CaseZero.Infrastructure.Data;
 using CaseZero.Core.Entities;
+using CaseZero.Core.DTOs;
+using CaseZero.Core.Services;
 using CaseZero.Api.Attributes;
 
 namespace CaseZero.Api.Controllers;
@@ -24,13 +26,15 @@ public class CasesController : ControllerBase
     /// </summary>
     [HttpGet]
     [DetectiveAndAbove] // All authenticated users can view cases
-    public async Task<ActionResult<IEnumerable<Case>>> GetCases()
+    public async Task<ActionResult<IEnumerable<CaseDto>>> GetCases()
     {
         var cases = await _context.Cases
             .Where(c => c.IsPublished)
+            .OrderBy(c => c.CreatedAt)
             .ToListAsync();
-        
-        return Ok(cases);
+
+        var caseDtos = cases.Select(MappingService.ToDto).ToList();
+        return Ok(caseDtos);
     }
 
     /// <summary>

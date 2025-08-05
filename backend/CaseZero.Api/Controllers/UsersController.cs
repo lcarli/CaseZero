@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using CaseZero.Infrastructure.Data;
 using CaseZero.Infrastructure.Services;
 using CaseZero.Core.Entities;
+using CaseZero.Core.DTOs;
+using CaseZero.Core.Services;
 using CaseZero.Api.Attributes;
 using CaseZero.Api.Models.Auth;
 
@@ -33,25 +35,14 @@ public class UsersController : ControllerBase
     /// </summary>
     [HttpGet]
     [AdminOnly]
-    public async Task<ActionResult<IEnumerable<UserProfile>>> GetUsers()
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
     {
         var users = await _context.Users
             .Where(u => u.Status == Core.Enums.UserStatus.Active)
-            .Select(u => new UserProfile
-            {
-                UserId = u.UserId,
-                Username = u.Username,
-                Email = u.Email,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                Role = u.Role.ToString(),
-                Department = u.Department ?? "",
-                Avatar = u.Avatar ?? "",
-                Badge = u.Badge ?? ""
-            })
             .ToListAsync();
 
-        return Ok(users);
+        var userDtos = users.Select(MappingService.ToDto).ToList();
+        return Ok(userDtos);
     }
 
     /// <summary>
