@@ -1,0 +1,159 @@
+{
+  "id": "vol_tableau_musee",
+  "title": {
+    "pt": "Vol de Tableau - Cas d'Introduction",
+    "en": "Painting Theft - Introduction Case",
+    "fr": "Vol de Tableau - Cas d'Introduction",
+    "es": "Robo de Cuadro - Caso de Introducción"
+  },
+  "description": {
+    "pt": "Un tableau de valeur a été volé du musée local. Analysez les preuves et résolvez cette enquête d'introduction.",
+    "en": "A valuable painting has been stolen from the local museum. Analyze the evidence and solve this introductory investigation.",
+    "fr": "Un tableau de valeur a été volé du musée local. Analysez les preuves et résolvez cette enquête d'introduction.",
+    "es": "Un cuadro valioso ha sido robado del museo local. Analiza las pruebas y resuelve esta investigación introductoria."
+  },
+  "briefing": {
+    "pt": "Bonjour détective ! Votre première mission vous attend.",
+    "en": "Hello detective! Your first mission awaits.",
+    "fr": "Bonjour détective ! Votre première mission vous attend.",
+    "es": "¡Hola detective! Te espera tu primera misión."
+  },
+  "culprit": "marie_dubois",
+  "proof_id": {
+    "single": "camera_evidence_001"
+  },
+  "available_analyses": [
+    {
+      "item_id": "camera_evidence_001",
+      "analysis_type": "video_analysis",
+      "cost": 200,
+      "time_hours": 2,
+      "required_lab": "digital_forensics",
+      "description": {
+        "pt": "Análise detalhada do vídeo de segurança",
+        "en": "Detailed security video analysis",
+        "fr": "Analyse détaillée de la vidéo de sécurité",
+        "es": "Análisis detallado del video de seguridad"
+      }
+    },
+    {
+      "item_id": "fingerprints_001",
+      "analysis_type": "fingerprint_analysis",
+      "cost": 150,
+      "time_hours": 3,
+      "required_lab": "forensics",
+      "description": {
+        "pt": "Análise das impressões digitais coletadas",
+        "en": "Analysis of collected fingerprints",
+        "fr": "Analyse des empreintes digitales collectées",
+        "es": "Análisis de las huellas dactilares recolectadas"
+      }
+    }
+  ],
+  "files": [
+    {
+      "id": "initial_report",
+      "type": "document",
+      "filename": "relatorio_inicial.pdf",
+      "title": {
+        "pt": "Relatório Inicial do Roubo",
+        "en": "Initial Theft Report",
+        "fr": "Rapport Initial du Vol",
+        "es": "Informe Inicial del Robo"
+      },
+      "description": {
+        "pt": "Primeiro relatório sobre o desaparecimento do quadro",
+        "en": "First report about the painting's disappearance",
+        "fr": "Premier rapport sur la disparition du tableau",
+        "es": "Primer informe sobre la desaparición del cuadro"
+      },
+      "content": {
+        "pt": "Relatório de Ocorrência Policial\\n\\nData: 05/08/2025\\nHorário: 14:30\\nLocal: Musée des Beaux-Arts\\n\\nOcorrência: Roubo de obra de arte\\n\\nDescrição: A gerente do museu, Sra. Claire Martin, reportou o desaparecimento de um quadro valioso da coleção permanente. O quadro 'Paysage Romantique' de autoria de Jean-Baptiste Moreau estava exposto na sala principal e foi notado como faltando durante a verificação rotineira da manhã.\\n\\nTestemunhas: Claire Martin (gerente), dois guardas de segurança\\n\\nPrimeiras observações: Não há sinais visíveis de arrombamento. Sistema de segurança funcionando normalmente.",
+        "en": "Police Incident Report\\n\\nDate: 05/08/2025\\nTime: 14:30\\nLocation: Musée des Beaux-Arts\\n\\nIncident: Art theft\\n\\nDescription: The museum manager, Mrs. Claire Martin, reported the disappearance of a valuable painting from the permanent collection. The painting 'Paysage Romantique' by Jean-Baptiste Moreau was displayed in the main hall and was noticed missing during the routine morning check.\\n\\nWitnesses: Claire Martin (manager), two security guards\\n\\nInitial observations: No visible signs of break-in. Security system functioning normally.",
+        "fr": "Rapport d'Incident de Police\\n\\nDate: 05/08/2025\\nHeure: 14:30\\nLieu: Musée des Beaux-Arts\\n\\nIncident: Vol d'œuvre d'art\\n\\nDescription: La directrice du musée, Mme Claire Martin, a signalé la disparition d'un tableau de valeur de la collection permanente. Le tableau 'Paysage Romantique' de Jean-Baptiste Moreau était exposé dans la salle principale et a été remarqué manquant lors de la vérification de routine du matin.\\n\\nTémoins: Claire Martin (directrice), deux gardiens de sécurité\\n\\nObservations initiales: Aucun signe visible d'effraction. Système de sécurité fonctionnant normalement.",
+        "es": "Informe de Incidente Policial\\n\\nFecha: 05/08/2025\\nHora: 14:30\\nUbicación: Musée des Beaux-Arts\\n\\nIncidente: Robo de obra de arte\\n\\nDescripción: La gerente del museo, Sra. Claire Martin, reportó la desaparición de un cuadro valioso de la colección permanente. El cuadro 'Paysage Romantique' de Jean-Baptiste Moreau estaba expuesto en la sala principal y se notó que faltaba durante la verificación rutinaria de la mañana.\\n\\nTestigos: Claire Martin (gerente), dos guardias de seguridad\\n\\nObservaciones iniciales: No hay signos visibles de allanamiento. Sistema de seguridad funcionando normalmente."
+      },
+      "dependencies": [],
+      "is_evidence": true,
+      "tags": ["report", "initial", "theft"]
+    },
+    {
+      "id": "camera_evidence_001",
+      "type": "video",
+      "filename": "camera_hall_001_05082025.mp4",
+      "title": {
+        "pt": "Gravação da Câmera - Sala Principal",
+        "en": "Camera Recording - Main Hall",
+        "fr": "Enregistrement Caméra - Salle Principale",
+        "es": "Grabación de Cámara - Sala Principal"
+      },
+      "description": {
+        "pt": "Vídeo de segurança da sala principal do museu das 13:00 às 15:00",
+        "en": "Security video from the museum's main hall from 13:00 to 15:00",
+        "fr": "Vidéo de sécurité de la salle principale du musée de 13h00 à 15h00",
+        "es": "Video de seguridad de la sala principal del museo de 13:00 a 15:00"
+      },
+      "transcription": {
+        "pt": "[13:45] Mulher de cabelos castanhos, cerca de 30 anos, entra na sala principal\\n[13:52] A mesma mulher se aproxima do quadro 'Paysage Romantique'\\n[13:55] Ela olha ao redor verificando se não há ninguém observando\\n[13:57] Remove cuidadosamente o quadro da parede\\n[14:01] Sai da sala carregando o quadro sob o braço",
+        "en": "[13:45] Brown-haired woman, about 30 years old, enters the main hall\\n[13:52] The same woman approaches the painting 'Paysage Romantique'\\n[13:55] She looks around checking if no one is watching\\n[13:57] Carefully removes the painting from the wall\\n[14:01] Leaves the room carrying the painting under her arm",
+        "fr": "[13:45] Femme aux cheveux bruns, environ 30 ans, entre dans la salle principale\\n[13:52] La même femme s'approche du tableau 'Paysage Romantique'\\n[13:55] Elle regarde autour pour vérifier que personne ne l'observe\\n[13:57] Retire soigneusement le tableau du mur\\n[14:01] Sort de la salle en portant le tableau sous le bras",
+        "es": "[13:45] Mujer de cabello castaño, de unos 30 años, entra en la sala principal\\n[13:52] La misma mujer se acerca al cuadro 'Paysage Romantique'\\n[13:55] Mira alrededor verificando que nadie la esté observando\\n[13:57] Retira cuidadosamente el cuadro de la pared\\n[14:01] Sale de la sala llevando el cuadro bajo el brazo"
+      },
+      "dependencies": [
+        {
+          "action": "request_analysis",
+          "analysis_type": "video_analysis",
+          "status": "pending",
+          "description": {
+            "pt": "Análise de vídeo necessária para identificar o suspeito",
+            "en": "Video analysis required to identify the suspect",
+            "fr": "Analyse vidéo nécessaire pour identifier le suspect",
+            "es": "Análisis de video necesario para identificar al sospechoso"
+          }
+        }
+      ],
+      "is_evidence": true,
+      "tags": ["video", "security", "crime_scene", "key_evidence"]
+    },
+    {
+      "id": "witness_statement_001",
+      "type": "document", 
+      "filename": "testemunho_claire_martin.pdf",
+      "title": {
+        "pt": "Depoimento - Claire Martin",
+        "en": "Statement - Claire Martin",
+        "fr": "Témoignage - Claire Martin", 
+        "es": "Declaración - Claire Martin"
+      },
+      "description": {
+        "pt": "Depoimento da gerente do museu Claire Martin",
+        "en": "Statement from museum manager Claire Martin",
+        "fr": "Témoignage de la directrice du musée Claire Martin",
+        "es": "Declaración de la gerente del museo Claire Martin"
+      },
+      "content": {
+        "pt": "Depoimento de Claire Martin - Gerente do Museu\\n\\nData: 05/08/2025\\nHorário: 15:30\\n\\nEu sou Claire Martin, gerente do Musée des Beaux-Arts há 8 anos. Esta manhã, durante a verificação de rotina que faço todos os dias às 9h00, notei que o quadro 'Paysage Romantique' não estava em seu local habitual na parede leste da sala principal.\\n\\nO quadro estava perfeitamente posicionado ontem à noite quando fechamos o museu às 18h00. Não houve nenhum evento especial ou movimento incomum ontem.\\n\\nVerifiquei com os guardas de segurança e nenhum deles notou algo suspeito durante a noite. O sistema de alarme não foi ativado em nenhum momento.\\n\\nO quadro tem valor estimado de €25.000 e é uma das peças mais visitadas da nossa coleção permanente.",
+        "en": "Statement by Claire Martin - Museum Manager\\n\\nDate: 05/08/2025\\nTime: 15:30\\n\\nI am Claire Martin, manager of the Musée des Beaux-Arts for 8 years. This morning, during the routine check I do every day at 9:00 AM, I noticed that the painting 'Paysage Romantique' was not in its usual place on the east wall of the main hall.\\n\\nThe painting was perfectly positioned last night when we closed the museum at 6:00 PM. There were no special events or unusual movements yesterday.\\n\\nI checked with the security guards and none of them noticed anything suspicious during the night. The alarm system was not triggered at any time.\\n\\nThe painting has an estimated value of €25,000 and is one of the most visited pieces in our permanent collection.",
+        "fr": "Témoignage de Claire Martin - Directrice du Musée\\n\\nDate: 05/08/2025\\nHeure: 15:30\\n\\nJe suis Claire Martin, directrice du Musée des Beaux-Arts depuis 8 ans. Ce matin, lors de la vérification de routine que je fais tous les jours à 9h00, j'ai remarqué que le tableau 'Paysage Romantique' n'était pas à sa place habituelle sur le mur est de la salle principale.\\n\\nLe tableau était parfaitement positionné hier soir quand nous avons fermé le musée à 18h00. Il n'y a eu aucun événement spécial ou mouvement inhabituel hier.\\n\\nJ'ai vérifié auprès des gardiens de sécurité et aucun d'eux n'a remarqué quelque chose de suspect pendant la nuit. Le système d'alarme n'a été déclenché à aucun moment.\\n\\nLe tableau a une valeur estimée à 25 000 € et est l'une des pièces les plus visitées de notre collection permanente.",
+        "es": "Declaración de Claire Martin - Gerente del Museo\\n\\nFecha: 05/08/2025\\nHora: 15:30\\n\\nSoy Claire Martin, gerente del Musée des Beaux-Arts desde hace 8 años. Esta mañana, durante la verificación rutinaria que hago todos los días a las 9:00 AM, noté que el cuadro 'Paysage Romantique' no estaba en su lugar habitual en la pared este de la sala principal.\\n\\nEl cuadro estaba perfectamente posicionado anoche cuando cerramos el museo a las 6:00 PM. No hubo eventos especiales o movimientos inusuales ayer.\\n\\nVerifiqué con los guardias de seguridad y ninguno de ellos notó algo sospechoso durante la noche. El sistema de alarma no se activó en ningún momento.\\n\\nEl cuadro tiene un valor estimado de €25,000 y es una de las piezas más visitadas de nuestra colección permanente."
+      },
+      "dependencies": [],
+      "is_evidence": true,
+      "tags": ["witness", "statement", "manager"]
+    }
+  ],
+  "metadata": {
+    "difficulty": 1,
+    "estimated_time": 30,
+    "tags": ["tutorial", "theft", "museum", "video_evidence"],
+    "creation_date": "2025-08-05T22:00:00Z",
+    "author": "System",
+    "version": "1.0"
+  },
+  "validation": {
+    "required_evidence": ["camera_evidence_001"],
+    "optional_evidence": ["witness_statement_001", "initial_report"],
+    "red_herrings": [],
+    "minimum_evidence_count": 1
+  }
+}

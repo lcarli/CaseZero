@@ -84,6 +84,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IDataSeedService, DataSeedService>();
+builder.Services.AddScoped<CaseZero.Core.Services.ICaseStructureService, CaseZero.Core.Services.CaseStructureService>();
 
 // Add CORS policy
 builder.Services.AddCors(options =>

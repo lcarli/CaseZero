@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { LoginRequest, LoginResponse, RegisterRequest, User, Case, Evidence, InvestigationSession } from '../types/api';
+import { CaseStructureService } from './caseStructureService';
 
 const API_BASE_URL = 'http://localhost:5029/api';
 
@@ -78,26 +79,26 @@ export const userService = {
   },
 };
 
-// Service des affaires
+// Service des affaires (maintenant basé sur les structures JSON)
 export const caseService = {
   async getCases(): Promise<Case[]> {
-    const response = await api.get<Case[]>('/cases');
-    return response.data;
+    // Utiliser le nouveau service CaseStructure au lieu de l'ancien
+    return await CaseStructureService.getCases();
   },
 
   async getCase(id: number): Promise<Case> {
-    const response = await api.get<Case>(`/cases/${id}`);
-    return response.data;
+    // Utiliser le nouveau service CaseStructure au lieu de l'ancien
+    return await CaseStructureService.getCase(id);
   },
 
   async getTutorialCase(): Promise<Case> {
-    const response = await api.get<Case>('/cases/tutorial');
-    return response.data;
+    // Utiliser le nouveau service CaseStructure au lieu de l'ancien
+    return await CaseStructureService.getTutorialCase();
   },
 
   async getTutorialCases(): Promise<Case[]> {
-    const response = await api.get<Case[]>('/cases?tutorial=true');
-    return response.data;
+    // Utiliser le nouveau service CaseStructure au lieu de l'ancien
+    return await CaseStructureService.getTutorialCases();
   },
 };
 
