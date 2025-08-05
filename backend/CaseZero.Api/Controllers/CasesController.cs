@@ -38,6 +38,25 @@ public class CasesController : ControllerBase
     }
 
     /// <summary>
+    /// Get the tutorial case
+    /// </summary>
+    [HttpGet("tutorial")]
+    [DetectiveAndAbove]
+    public async Task<ActionResult<CaseDto>> GetTutorialCase()
+    {
+        var tutorialCase = await _context.Cases
+            .FirstOrDefaultAsync(c => c.IsTutorial);
+
+        if (tutorialCase == null)
+        {
+            return NotFound("No tutorial case found");
+        }
+
+        var caseDto = MappingService.ToDto(tutorialCase);
+        return Ok(caseDto);
+    }
+
+    /// <summary>
     /// Get a specific case by ID
     /// </summary>
     [HttpGet("{id}")]

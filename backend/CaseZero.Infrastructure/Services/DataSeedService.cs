@@ -89,25 +89,25 @@ public class DataSeedService : IDataSeedService
 
             var tutorialCase = new Case
             {
-                CaseNumber = "CASE-TUTORIAL-001",
-                Title = "Vol de Tableau - Cas d'Introduction",
-                TitleEn = "Painting Theft - Tutorial Case",
-                Description = "Un tableau de valeur a été volé du musée local. Analysez les preuves et résolvez cette enquête d'introduction.",
-                DescriptionEn = "A valuable painting has been stolen from the local museum. Analyze the evidence and solve this introductory investigation.",
+                CaseNumber = "TUTORIAL_001",
+                Title = "O Roubo do Café",
+                TitleEn = "The Coffee Shop Theft",
+                Description = "Um caso simples para aprender as mecânicas básicas do jogo. Alguém roubou R$ 350 do caixa da cafeteria universitária.",
+                DescriptionEn = "A simple case to learn the basic game mechanics. Someone stole $350 from the university cafeteria cash register.",
                 Type = CaseType.Theft,
                 Difficulty = CaseDifficulty.Tutorial,
                 Status = CaseStatus.Open,
-                EstimatedTimeMinutes = 30,
+                EstimatedTimeMinutes = 15,
                 IsPublished = true,
                 IsTutorial = true,
-                Location = "Musée des Beaux-Arts",
-                LocationEn = "Fine Arts Museum",
+                Location = "Cafeteria Central - Campus Universitário",
+                LocationEn = "Central Cafeteria - University Campus",
                 CreatedAt = DateTime.UtcNow,
                 PublishedAt = DateTime.UtcNow,
                 CreatedBy = "System",
-                Tags = "tutorial,theft,art,beginner",
-                Solution = "Le gardien de nuit était complice. Les indices comprennent ses empreintes sur le cadre et sa présence non autorisée dans la galerie.",
-                SolutionEn = "The night guard was an accomplice. Evidence includes his fingerprints on the frame and unauthorized presence in the gallery."
+                Tags = "tutorial,theft,university,cafeteria",
+                Solution = "Maria Santos roubou R$ 350 do caixa da cafeteria durante o horário de pico. A evidência foi capturada pela câmera de segurança.",
+                SolutionEn = "Maria Santos stole $350 from the cafeteria cash register during peak hours. Evidence was captured by security camera."
             };
 
             _context.Cases.Add(tutorialCase);
@@ -120,46 +120,46 @@ public class DataSeedService : IDataSeedService
                 {
                     CaseId = tutorialCase.CaseId,
                     EvidenceNumber = "EV001",
-                    Name = "Empreintes digitales sur le cadre",
-                    NameEn = "Fingerprints on frame",
-                    Description = "Empreintes relevées sur le cadre du tableau volé",
-                    DescriptionEn = "Fingerprints found on the stolen painting's frame",
-                    Type = EvidenceType.Physical,
-                    Category = EvidenceCategory.Scene,
-                    Location = "Galerie principale",
-                    LocationEn = "Main gallery",
+                    Name = "Relatório Inicial do Gerente",
+                    NameEn = "Manager's Initial Report",
+                    Description = "Relatório da descoberta do roubo feito pela gerente Ana Oliveira",
+                    DescriptionEn = "Report of the theft discovery made by manager Ana Oliveira",
+                    Type = EvidenceType.Document,
+                    Category = EvidenceCategory.Witness,
+                    Location = "Cafeteria Central",
+                    LocationEn = "Central Cafeteria",
                     CollectedAt = DateTime.UtcNow.AddHours(-2),
-                    CollectedBy = "Technicien Legrand",
-                    CollectedByEn = "Technician Legrand",
+                    CollectedBy = "Detective Silva",
+                    CollectedByEn = "Detective Silva",
                     IsAvailable = true,
-                    RequiresAnalysis = true,
-                    Tags = "fingerprints,frame,physical"
+                    RequiresAnalysis = false,
+                    Tags = "report,manager,discovery"
                 },
                 new Evidence
                 {
                     CaseId = tutorialCase.CaseId,
                     EvidenceNumber = "EV002",
-                    Name = "Enregistrement vidéo surveillance",
-                    NameEn = "CCTV recording",
-                    Description = "Vidéo de surveillance montrant les mouvements dans le musée",
-                    DescriptionEn = "Surveillance video showing movements in the museum",
+                    Name = "Gravação de Segurança",
+                    NameEn = "Security Camera Recording",
+                    Description = "Vídeo da câmera de segurança mostrando atividade no caixa às 14h15",
+                    DescriptionEn = "Security camera video showing activity at the cash register at 14:15",
                     Type = EvidenceType.Video,
                     Category = EvidenceCategory.Technical,
-                    Location = "Centre de sécurité",
-                    LocationEn = "Security center",
+                    Location = "Câmera 02 - Área do Caixa",
+                    LocationEn = "Camera 02 - Cash Register Area",
                     CollectedAt = DateTime.UtcNow.AddHours(-1),
-                    CollectedBy = "Agent Dubois",
-                    CollectedByEn = "Officer Dubois",
+                    CollectedBy = "Técnico Segurança",
+                    CollectedByEn = "Security Technician",
                     IsAvailable = true,
-                    RequiresAnalysis = false,
-                    Tags = "video,surveillance,digital"
+                    RequiresAnalysis = true,
+                    Tags = "video,security,cash,register"
                 }
             };
 
             _context.Evidences.AddRange(evidences);
             await _context.SaveChangesAsync();
 
-            _logger.LogInformation("Sample tutorial case created with evidence");
+            _logger.LogInformation("Tutorial case 'O Roubo do Café' created with evidence");
         }
     }
 }

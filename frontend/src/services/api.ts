@@ -90,6 +90,11 @@ export const caseService = {
     return response.data;
   },
 
+  async getTutorialCase(): Promise<Case> {
+    const response = await api.get<Case>('/cases/tutorial');
+    return response.data;
+  },
+
   async getTutorialCases(): Promise<Case[]> {
     const response = await api.get<Case[]>('/cases?tutorial=true');
     return response.data;
