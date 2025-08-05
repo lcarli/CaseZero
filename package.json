@@ -1,0 +1,26 @@
+{
+  "name": "casezero-workspace",
+  "version": "1.0.0",
+  "description": "Case Zero - Criminal Investigation Training Platform",
+  "scripts": {
+    "install-all": "npm install --prefix frontend && dotnet restore backend/CaseZero.Api",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend/CaseZero.Api && dotnet run",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend/CaseZero.Api && dotnet build",
+    "clean": "cd frontend && rm -rf node_modules dist && cd ../backend/CaseZero.Api && dotnet clean",
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "cd frontend && npm run test",
+    "test:backend": "cd backend && dotnet test"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Case Zero Team",
+  "license": "MIT"
+}

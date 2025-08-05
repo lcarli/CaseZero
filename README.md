@@ -122,7 +122,7 @@ sqlcmd -S seu-servidor -d CaseZero -i scripts/database/database_schema.sql
 psql -U postgres -d casezero -f scripts/database/database_schema_postgresql.sql
 ```
 
-### 3. Configure o backend
+### 3. Configure le backend
 
 ```bash
 cd backend/CaseZero.Api
@@ -138,7 +138,7 @@ dotnet ef database update
 dotnet run
 ```
 
-### 4. Configure o frontend
+### 4. Configure le frontend
 
 ```bash
 cd frontend
@@ -149,6 +149,62 @@ npm install
 # Execute em modo desenvolvimento
 npm run dev
 ```
+
+## 🚀 Scripts de Développement
+
+Para facilitar o desenvolvimento, fornecemos várias opções para rodar frontend e backend simultaneamente:
+
+### Opção 1: NPM Script (Recomendado)
+
+```bash
+# Na raiz do projeto
+npm install  # Instala concurrently
+
+# Roda frontend e backend juntos
+npm run dev
+
+# Outras opções úteis:
+npm run install-all  # Instala todas as dependências
+npm run build        # Build completo
+npm run clean        # Limpa arquivos de build
+```
+
+### Opção 2: Script Bash (macOS/Linux)
+
+```bash
+# Na raiz do projeto
+./scripts/development/start-dev.sh
+```
+
+### Opção 3: Makefile
+
+```bash
+# Ver comandos disponíveis
+make help
+
+# Rodar modo desenvolvimento
+make dev
+
+# Instalar dependências
+make install
+```
+
+### Opção 4: PowerShell (Windows)
+
+```powershell
+# Na raiz do projeto
+.\scripts\development\start-dev.ps1
+
+# Com instalação de dependências
+.\scripts\development\start-dev.ps1 -InstallDeps
+```
+
+### URLs de Desenvolvimento
+
+- **Frontend**: http://localhost:3000
+- **Backend**: http://localhost:5000  
+- **Swagger UI**: http://localhost:5000/swagger
+- **Logs**: `logs/backend.log` e `logs/frontend.log`
 
 ### 5. Acesse a aplicação
 
