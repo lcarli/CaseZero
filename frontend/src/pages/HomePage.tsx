@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../store/authStore';
 import { 
   PlayCircleIcon, 
   EyeIcon, 
@@ -21,6 +22,7 @@ import LanguageSwitcher from '../components/ui/LanguageSwitcher';
 
 const HomePage: React.FC = () => {
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuthStore();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -45,18 +47,29 @@ const HomePage: React.FC = () => {
                 {t('navigation.testimonials')}
               </a>
               <LanguageSwitcher />
-              <Link 
-                to="/login" 
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-              >
-                {t('navigation.login')}
-              </Link>
-              <Link 
-                to="/register" 
-                className="border border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white px-4 py-2 rounded-lg transition-colors"
-              >
-                {t('navigation.register')}
-              </Link>
+              {isAuthenticated ? (
+                <Link 
+                  to="/dashboard" 
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                  {t('navigation.dashboard')}
+                </Link>
+              ) : (
+                <>
+                  <Link 
+                    to="/login" 
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  >
+                    {t('navigation.login')}
+                  </Link>
+                  <Link 
+                    to="/register" 
+                    className="border border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white px-4 py-2 rounded-lg transition-colors"
+                  >
+                    {t('navigation.register')}
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -83,20 +96,20 @@ const HomePage: React.FC = () => {
                 <Button 
                   variant="primary"
                   size="lg"
-                  to="/register"
+                  to={isAuthenticated ? "/dashboard" : "/register"}
                   className="inline-flex items-center"
                 >
                   <PlayCircleIcon className="h-5 w-5 mr-2" />
-                  {t('hero.ctaPrimary')}
+                  {isAuthenticated ? t('navigation.dashboard') : t('hero.ctaPrimary')}
                 </Button>
                 <Button 
                   variant="outline"
                   size="lg"
-                  to="/test-game"
+                  to={isAuthenticated ? "/tutorial" : "/test-game"}
                   className="inline-flex items-center border-slate-400 text-slate-300 hover:text-white hover:border-white"
                 >
                   <EyeIcon className="h-5 w-5 mr-2" />
-                  {t('hero.ctaSecondary')}
+                  {isAuthenticated ? t('dashboard.tutorial') : t('hero.ctaSecondary')}
                 </Button>
               </div>
             </div>
@@ -303,16 +316,16 @@ const HomePage: React.FC = () => {
             <Button 
               variant="primary"
               size="lg"
-              to="/register"
+              to={isAuthenticated ? "/dashboard" : "/register"}
             >
-              {t('cta.button')}
+              {isAuthenticated ? t('navigation.dashboard') : t('cta.button')}
             </Button>
             <Button 
               variant="outline"
               size="lg"
-              to="/test-game"
+              to={isAuthenticated ? "/tutorial" : "/test-game"}
             >
-              {t('hero.ctaSecondary')}
+              {isAuthenticated ? t('dashboard.tutorial') : t('hero.ctaSecondary')}
             </Button>
           </div>
         </div>

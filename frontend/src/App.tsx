@@ -4,14 +4,16 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuthStore, initializeAuth } from './store/authStore';
 import { ToastProvider } from './components/ToastProvider';
 import ProtectedRoute from './components/ProtectedRoute';
-import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import CaseDetailPage from './pages/CaseDetailPage';
 import InvestigationPage from './pages/InvestigationPage';
 import CaseInvestigationPage from './pages/CaseInvestigationPage';
+import TutorialPage from './pages/TutorialPage';
+import HomePage from './pages/HomePage';
 import GameTester from './components/GameTester';
+import './i18n';
 import './styles/globals.css';
 
 // Configuration de React Query
@@ -38,12 +40,6 @@ const App: React.FC = () => {
         <Router>
           <div className="App">
             <Routes>
-            {/* Page d'accueil */}
-            <Route 
-              path="/" 
-              element={<HomePage />} 
-            />
-            
             {/* Routes publiques */}
             <Route 
               path="/login" 
@@ -64,6 +60,15 @@ const App: React.FC = () => {
               element={
                 <ProtectedRoute>
                   <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/tutorial"
+              element={
+                <ProtectedRoute>
+                  <TutorialPage />
                 </ProtectedRoute>
               }
             />
@@ -124,12 +129,10 @@ const App: React.FC = () => {
               }
             />
             
-            {/* Route par défaut */}
+            {/* Route principale - Landing Page */}
             <Route
               path="/"
-              element={
-                <Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />
-              }
+              element={<HomePage />}
             />
             
             {/* Route 404 */}

@@ -24,6 +24,7 @@ i18n
     // Configuration des ressources
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json',
+      crossDomain: true,
     },
 
     // Configuration des interpolations
@@ -44,6 +45,9 @@ i18n
     // Retourne toujours une clé même si la traduction n'existe pas
     returnEmptyString: false,
     returnNull: false,
+    
+    // Configuration pour éviter les problèmes de cache
+    cleanCode: true,
   });
 
 export default i18n;
