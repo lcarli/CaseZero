@@ -1,0 +1,94 @@
+{
+  "project": {
+    "name": "Case Zero",
+    "version": "1.0.0-beta",
+    "description": "Realistic police investigation simulator web game",
+    "repository": "https://github.com/lucashumenhuk/CaseZero",
+    "license": "MIT"
+  },
+  "architecture": {
+    "backend": {
+      "framework": "ASP.NET Core 8",
+      "language": "C#",
+      "database": "Azure SQL Database / PostgreSQL",
+      "storage": "Azure Blob Storage",
+      "authentication": "JWT",
+      "api": "RESTful"
+    },
+    "frontend": {
+      "framework": "React 18",
+      "language": "TypeScript",
+      "styling": "Tailwind CSS",
+      "state": "Zustand",
+      "http": "React Query + Axios",
+      "i18n": "i18next"
+    },
+    "infrastructure": {
+      "cloud": "Microsoft Azure",
+      "iac": "Bicep",
+      "deployment": "Azure Developer CLI (azd)",
+      "cicd": "GitHub Actions"
+    }
+  },
+  "environments": {
+    "development": {
+      "api_url": "http://localhost:5000",
+      "web_url": "http://localhost:3000",
+      "database": "local"
+    },
+    "staging": {
+      "api_url": "https://casezero-staging-api.azurewebsites.net",
+      "web_url": "https://casezero-staging.azurestaticapps.net",
+      "database": "azure_sql"
+    },
+    "production": {
+      "api_url": "https://casezero-api.azurewebsites.net", 
+      "web_url": "https://casezero.azurestaticapps.net",
+      "database": "azure_sql"
+    }
+  },
+  "features": {
+    "authentication": true,
+    "multilingual": true,
+    "supported_languages": ["pt", "en", "fr", "es"],
+    "default_language": "pt",
+    "real_time": false,
+    "offline_mode": false,
+    "progressive_web_app": true
+  },
+  "game_mechanics": {
+    "case_types": ["tutorial", "basic", "intermediate", "advanced", "expert"],
+    "difficulty_levels": [1, 2, 3, 4, 5],
+    "max_concurrent_analyses": 3,
+    "analysis_time_simulation": true,
+    "hint_system": true,
+    "scoring_system": true
+  },
+  "technical_requirements": {
+    "backend": {
+      "dotnet_version": "8.0",
+      "minimum_ram": "512MB",
+      "database_provider": "Entity Framework Core"
+    },
+    "frontend": {
+      "node_version": ">=18.0.0",
+      "npm_version": ">=9.0.0",
+      "browser_support": ["Chrome 90+", "Firefox 88+", "Safari 14+", "Edge 90+"]
+    }
+  },
+  "development": {
+    "git_flow": {
+      "main_branch": "main",
+      "development_branch": "develop",
+      "feature_prefix": "feature/",
+      "release_prefix": "release/",
+      "hotfix_prefix": "hotfix/"
+    },
+    "code_quality": {
+      "test_coverage_minimum": 70,
+      "eslint": true,
+      "prettier": true,
+      "sonarqube": false
+    }
+  }
+}

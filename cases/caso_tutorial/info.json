@@ -1,0 +1,50 @@
+{
+  "id": "caso_tutorial",
+  "case_number": "TUTORIAL_001",
+  "title": {
+    "pt": "O Roubo do Café",
+    "en": "The Coffee Shop Theft",
+    "fr": "Le Vol du Café",
+    "es": "El Robo del Café"
+  },
+  "description": {
+    "pt": "Um caso simples para aprender as mecânicas básicas do jogo. Alguém roubou o dinheiro do caixa da cafeteria universitária.",
+    "en": "A simple case to learn the basic game mechanics. Someone stole money from the university cafeteria cash register.",
+    "fr": "Un cas simple pour apprendre les mécaniques de base du jeu. Quelqu'un a volé l'argent de la caisse de la cafétéria universitaire.",
+    "es": "Un caso simple para aprender las mecánicas básicas del juego. Alguien robó dinero de la caja registradora de la cafetería universitaria."
+  },
+  "difficulty": "Tutorial",
+  "estimated_time_minutes": 15,
+  "culprit": "Maria Santos",
+  "proof_file_ids": ["video_camera_02.mp4"],
+  "suspects": [
+    {
+      "name": "João Silva",
+      "role": "Estudante",
+      "description": "Frequentador regular da cafeteria, estava presente no local"
+    },
+    {
+      "name": "Maria Santos", 
+      "role": "Funcionária",
+      "description": "Trabalha meio período na cafeteria, tinha acesso ao caixa"
+    },
+    {
+      "name": "Pedro Costa",
+      "role": "Professor",
+      "description": "Comprou café pouco antes do roubo ser descoberto"
+    }
+  ],
+  "available_analyses": [
+    "impressoes_digitais_caixa",
+    "video_camera_02", 
+    "audio_testemunha_joao"
+  ],
+  "learning_objectives": [
+    "Navegar por arquivos de evidência",
+    "Solicitar análises forenses",
+    "Construir timeline de eventos",
+    "Fazer acusação com prova correta"
+  ],
+  "created_at": "2025-08-05T00:00:00Z",
+  "is_published": true
+}

@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: casezero
+metadata:
+  template: casezero@0.0.1-beta
+  
+services:
+  api:
+    project: ./backend/CaseZero.Api
+    language: dotnet
+    host: appservice
+    
+  web:
+    project: ./frontend
+    language: js
+    host: staticwebapp
+    
+hooks:
+  predeploy:
+    shell: sh
+    run: |
+      echo "Building Case Zero application..."
+      
+  postdeploy:
+    shell: sh  
+    run: |
+      echo "Case Zero deployed successfully!"
+      echo "Running post-deployment database setup..."
+      
+infra:
+  provider: bicep
+  path: ./infrastructure
