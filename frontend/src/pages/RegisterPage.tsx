@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/authStore';
 import { RegisterRequest } from '../types/api';
 
 const RegisterPage: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { register, isLoading, error, clearError } = useAuthStore();
   
@@ -36,7 +38,7 @@ const RegisterPage: React.FC = () => {
     
     if (formData.password !== confirmPassword) {
       // Ici on pourrait utiliser un système d'erreur plus sophistiqué
-      alert('Les mots de passe ne correspondent pas');
+      alert(t('register.passwordMismatch'));
       return;
     }
     
@@ -53,10 +55,10 @@ const RegisterPage: React.FC = () => {
       <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-2xl">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Case Zero
+            {t('register.title')}
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Créer votre compte détective
+            {t('register.subtitle')}
           </p>
         </div>
         
@@ -71,7 +73,7 @@ const RegisterPage: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                  Prénom
+                  {t('register.firstNameLabel')}
                 </label>
                 <input
                   id="firstName"
@@ -79,7 +81,7 @@ const RegisterPage: React.FC = () => {
                   type="text"
                   required
                   className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Jean"
+                  placeholder={t('register.firstNamePlaceholder')}
                   value={formData.firstName}
                   onChange={handleChange}
                 />
@@ -87,7 +89,7 @@ const RegisterPage: React.FC = () => {
               
               <div>
                 <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                  Nom
+                  {t('register.lastNameLabel')}
                 </label>
                 <input
                   id="lastName"
@@ -95,7 +97,7 @@ const RegisterPage: React.FC = () => {
                   type="text"
                   required
                   className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Dupont"
+                  placeholder={t('register.lastNamePlaceholder')}
                   value={formData.lastName}
                   onChange={handleChange}
                 />
@@ -104,7 +106,7 @@ const RegisterPage: React.FC = () => {
             
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                Nom d'utilisateur
+                {t('register.usernameLabel')}
               </label>
               <input
                 id="username"
@@ -112,7 +114,7 @@ const RegisterPage: React.FC = () => {
                 type="text"
                 required
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="detective_dupont"
+                placeholder={t('register.usernamePlaceholder')}
                 value={formData.username}
                 onChange={handleChange}
               />
@@ -120,7 +122,7 @@ const RegisterPage: React.FC = () => {
             
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
+                {t('register.emailLabel')}
               </label>
               <input
                 id="email"
@@ -129,7 +131,7 @@ const RegisterPage: React.FC = () => {
                 autoComplete="email"
                 required
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="jean.dupont@exemple.com"
+                placeholder={t('register.emailPlaceholder')}
                 value={formData.email}
                 onChange={handleChange}
               />
@@ -137,7 +139,7 @@ const RegisterPage: React.FC = () => {
             
             <div>
               <label htmlFor="department" className="block text-sm font-medium text-gray-700">
-                Département
+                {t('register.departmentLabel')}
               </label>
               <input
                 id="department"
@@ -145,7 +147,7 @@ const RegisterPage: React.FC = () => {
                 type="text"
                 required
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Investigation Criminelle"
+                placeholder={t('register.departmentPlaceholder')}
                 value={formData.department}
                 onChange={handleChange}
               />
@@ -153,7 +155,7 @@ const RegisterPage: React.FC = () => {
             
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Mot de passe
+                {t('register.passwordLabel')}
               </label>
               <input
                 id="password"
@@ -162,7 +164,7 @@ const RegisterPage: React.FC = () => {
                 autoComplete="new-password"
                 required
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Mot de passe"
+                placeholder={t('register.passwordPlaceholder')}
                 value={formData.password}
                 onChange={handleChange}
               />
@@ -170,7 +172,7 @@ const RegisterPage: React.FC = () => {
             
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirmer le mot de passe
+                {t('register.confirmPasswordLabel')}
               </label>
               <input
                 id="confirmPassword"
@@ -179,7 +181,7 @@ const RegisterPage: React.FC = () => {
                 autoComplete="new-password"
                 required
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Confirmer le mot de passe"
+                placeholder={t('register.confirmPasswordPlaceholder')}
                 value={confirmPassword}
                 onChange={handleChange}
               />

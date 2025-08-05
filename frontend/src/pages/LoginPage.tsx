@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/authStore';
 import { LoginRequest } from '../types/api';
 
 const LoginPage: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { login, isLoading, error, clearError } = useAuthStore();
   
@@ -43,10 +45,10 @@ const LoginPage: React.FC = () => {
             </svg>
           </div>
           <h2 className="text-center text-3xl font-extrabold text-gray-900">
-            Case Zero
+            {t('login.title')}
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Connexion à votre compte détective
+            {t('login.subtitle')}
           </p>
         </div>
         
@@ -60,7 +62,7 @@ const LoginPage: React.FC = () => {
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
+                {t('login.emailLabel')}
               </label>
               <input
                 id="email"
@@ -69,7 +71,7 @@ const LoginPage: React.FC = () => {
                 autoComplete="email"
                 required
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="votre.email@exemple.com"
+                placeholder={t('login.emailPlaceholder')}
                 value={formData.email}
                 onChange={handleChange}
               />
@@ -77,7 +79,7 @@ const LoginPage: React.FC = () => {
             
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Mot de passe
+                {t('login.passwordLabel')}
               </label>
               <input
                 id="password"
@@ -86,7 +88,7 @@ const LoginPage: React.FC = () => {
                 autoComplete="current-password"
                 required
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Mot de passe"
+                placeholder={t('login.passwordPlaceholder')}
                 value={formData.password}
                 onChange={handleChange}
               />
@@ -99,15 +101,15 @@ const LoginPage: React.FC = () => {
               disabled={isLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Connexion...' : 'Se connecter'}
+              {isLoading ? t('login.loadingButton') : t('login.submitButton')}
             </button>
           </div>
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              Pas encore de compte ?{' '}
+              {t('login.noAccount')}{' '}
               <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-                S'inscrire
+                {t('login.signUpLink')}
               </Link>
             </p>
           </div>
