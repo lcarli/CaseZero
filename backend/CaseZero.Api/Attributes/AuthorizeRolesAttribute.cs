@@ -63,3 +63,8 @@ public class DetectiveAndAboveAttribute : AuthorizeRolesAttribute
 {
     public DetectiveAndAboveAttribute() : base(UserRole.Administrator, UserRole.Supervisor, UserRole.Detective) { }
 }
+
+public class AnalystAndAboveAttribute : AuthorizeRolesAttribute
+{
+    public AnalystAndAboveAttribute() : base(UserRole.Administrator, UserRole.Supervisor, UserRole.Analyst) { }
+}
