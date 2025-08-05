@@ -48,12 +48,8 @@ const CasePage: React.FC = () => {
 
         let caseData: Case;
         
-        // Check if it's tutorial case
-        if (caseId === 'tutorial') {
-          caseData = await caseService.getTutorialCase();
-        } else {
-          caseData = await caseService.getCase(parseInt(caseId));
-        }
+        // Get case by ID
+        caseData = await caseService.getCase(parseInt(caseId));
         
         setCurrentCase(caseData);
         
