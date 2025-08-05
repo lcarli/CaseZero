@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { LoginRequest, LoginResponse, RegisterRequest, User, Case, Evidence, InvestigationSession } from '../types/api';
 
-const API_BASE_URL = 'http://localhost:5030/api';
+const API_BASE_URL = 'http://localhost:5029/api';
 
 // Configuration d'Axios
 const api: AxiosInstance = axios.create({

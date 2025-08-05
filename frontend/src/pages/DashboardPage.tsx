@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/authStore';
 import { Case } from '../types/api';
 import { caseService } from '../services/api';
@@ -7,8 +8,10 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import StatsSection from '../components/StatsSection';
 import CaseFilters from '../components/CaseFilters';
 import SearchBar from '../components/SearchBar';
+import LanguageSwitcher from '../components/ui/LanguageSwitcher';
 
 const DashboardPage: React.FC = () => {
+  const { t } = useTranslation();
   const { user, logout } = useAuthStore();
   const [cases, setCases] = useState<Case[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,24 +69,24 @@ const DashboardPage: React.FC = () => {
 
   const getDifficultyLabel = (difficulty: number) => {
     const labels = {
-      1: 'Tutoriel',
-      2: 'Facile', 
-      3: 'Moyen',
-      4: 'Difficile',
-      5: 'Expert'
+      1: t('dashboard.difficulty.tutorial'),
+      2: t('dashboard.difficulty.easy'), 
+      3: t('dashboard.difficulty.medium'),
+      4: t('dashboard.difficulty.hard'),
+      5: t('dashboard.difficulty.expert')
     };
-    return labels[difficulty as keyof typeof labels] || 'Inconnu';
+    return labels[difficulty as keyof typeof labels] || t('dashboard.difficulty.unknown');
   };
 
   const getStatusLabel = (status: number) => {
     const labels = {
-      1: 'Ouvert',
-      2: 'En cours',
-      3: 'Résolu',
-      4: 'Fermé',
-      5: 'Archivé'
+      1: t('dashboard.status.open'),
+      2: t('dashboard.status.inProgress'),
+      3: t('dashboard.status.solved'),
+      4: t('dashboard.status.closed'),
+      5: t('dashboard.status.archived')
     };
-    return labels[status as keyof typeof labels] || 'Inconnu';
+    return labels[status as keyof typeof labels] || t('dashboard.status.unknown');
   };
 
   return (
@@ -94,21 +97,22 @@ const DashboardPage: React.FC = () => {
           <div className="flex justify-between items-center py-6">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Case Zero</h1>
-              <p className="text-sm text-gray-600">Système d'investigation criminelle</p>
+              <p className="text-sm text-gray-600">{t('dashboard.subtitle')}</p>
             </div>
             <div className="flex items-center space-x-4">
+              <LanguageSwitcher />
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-900">
                   {user?.firstName} {user?.lastName}
                 </p>
                 <p className="text-xs text-gray-500">{user?.role} - {user?.department}</p>
-                <p className="text-xs text-gray-500">Badge: {user?.badge}</p>
+                <p className="text-xs text-gray-500">{t('dashboard.badge')}: {user?.badge}</p>
               </div>
               <button
                 onClick={handleLogout}
                 className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
               >
-                Déconnexion
+                {t('dashboard.logout')}
               </button>
             </div>
           </div>
@@ -132,13 +136,13 @@ const DashboardPage: React.FC = () => {
                 </div>
                 <div className="ml-4">
                   <h2 className="text-xl font-semibold">
-                    Bonjour, {user.firstName} {user.lastName}
+                    {t('dashboard.welcome', { firstName: user.firstName, lastName: user.lastName })}
                   </h2>
                   <p className="text-indigo-100">
-                    {user.role} | Badge #{user.badge} | {user.department}
+                    {user.role} | {t('dashboard.badge')} #{user.badge} | {user.department}
                   </p>
                   <p className="text-sm text-indigo-200 mt-1">
-                    Prêt à résoudre de nouveaux mystères ?
+                    {t('dashboard.welcomeMessage')}
                   </p>
                 </div>
               </div>
@@ -159,7 +163,7 @@ const DashboardPage: React.FC = () => {
               <SearchBar
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
-                placeholder="Rechercher par titre, description ou localisation..."
+                placeholder={t('dashboard.searchPlaceholder')}
               />
             </div>
           )}
@@ -174,7 +178,7 @@ const DashboardPage: React.FC = () => {
           )}
           
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Affaires disponibles</h2>
+            <h2 className="text-2xl font-bold text-gray-900">{t('dashboard.availableCases')}</h2>
             
             {/* Actions rapides */}
             <div className="flex space-x-3">
@@ -185,7 +189,7 @@ const DashboardPage: React.FC = () => {
                 <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                Tutoriels
+                {t('dashboard.tutorials')}
               </button>
               
               <button
@@ -195,12 +199,12 @@ const DashboardPage: React.FC = () => {
                 <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd"/>
                 </svg>
-                Toutes les affaires
+                {t('dashboard.allCases')}
               </button>
             </div>
           </div>
           
-          {loading && <LoadingSpinner text="Chargement des affaires..." />}
+          {loading && <LoadingSpinner text={t('dashboard.loading')} />}
           
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md mb-6">
@@ -232,7 +236,7 @@ const DashboardPage: React.FC = () => {
                             <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            Tutoriel
+                            {t('dashboard.tutorial')}
                           </span>
                         )}
                       </div>
@@ -249,7 +253,7 @@ const DashboardPage: React.FC = () => {
                           <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                           </svg>
-                          Difficulté:
+                          {t('dashboard.labels.difficulty')}:
                         </span>
                         <div className="flex items-center">
                           <span className="font-medium mr-2">{getDifficultyLabel(caseItem.difficulty)}</span>
@@ -274,7 +278,7 @@ const DashboardPage: React.FC = () => {
                           <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                           </svg>
-                          Statut:
+                          {t('dashboard.labels.status')}:
                         </span>
                         <span className="font-medium">{getStatusLabel(caseItem.status)}</span>
                       </div>
@@ -285,9 +289,9 @@ const DashboardPage: React.FC = () => {
                           <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"/>
                           </svg>
-                          Temps estimé:
+                          {t('dashboard.labels.estimatedTime')}:
                         </span>
-                        <span className="font-medium">{caseItem.estimatedTimeMinutes} min</span>
+                        <span className="font-medium">{caseItem.estimatedTimeMinutes} {t('dashboard.labels.minutes')}</span>
                       </div>
                       
                       {/* Location */}
@@ -296,7 +300,7 @@ const DashboardPage: React.FC = () => {
                           <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
                           </svg>
-                          Localisation:
+                          {t('dashboard.labels.location')}:
                         </span>
                         <span className="font-medium">{caseItem.location}</span>
                       </div>
@@ -310,7 +314,7 @@ const DashboardPage: React.FC = () => {
                         to={`/cases/${caseItem.caseId}`}
                         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       >
-                        Enquêter
+                        {t('dashboard.investigate')}
                       </Link>
                     </div>
                   </div>
@@ -324,14 +328,14 @@ const DashboardPage: React.FC = () => {
               <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">Aucune affaire trouvée</h3>
-              <p className="mt-1 text-sm text-gray-500">Essayez de modifier vos critères de filtrage.</p>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">{t('dashboard.noCasesFound')}</h3>
+              <p className="mt-1 text-sm text-gray-500">{t('dashboard.noCasesFoundMessage')}</p>
             </div>
           )}
           
           {!loading && !error && cases.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-500">Aucune affaire disponible pour le moment.</p>
+              <p className="text-gray-500">{t('dashboard.noCasesAvailable')}</p>
             </div>
           )}
         </div>
