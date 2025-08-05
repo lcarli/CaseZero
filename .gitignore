@@ -229,6 +229,13 @@ Icon?
 # Entity Framework
 Migrations/
 
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+
 # Keep only schema migrations
 !Migrations/Initial*.cs
 !Migrations/*InitialCreate*.cs
