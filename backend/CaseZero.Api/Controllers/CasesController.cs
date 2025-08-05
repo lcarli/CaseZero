@@ -1,12 +1,15 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CaseZero.Infrastructure.Data;
 using CaseZero.Core.Entities;
+using CaseZero.Api.Attributes;
 
 namespace CaseZero.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize] // Require authentication for all endpoints
 public class CasesController : ControllerBase
 {
     private readonly CaseZeroDbContext _context;
@@ -20,6 +23,7 @@ public class CasesController : ControllerBase
     /// Get all published cases
     /// </summary>
     [HttpGet]
+    [DetectiveAndAbove] // All authenticated users can view cases
     public async Task<ActionResult<IEnumerable<Case>>> GetCases()
     {
         var cases = await _context.Cases
@@ -33,6 +37,7 @@ public class CasesController : ControllerBase
     /// Get a specific case by ID
     /// </summary>
     [HttpGet("{id}")]
+    [DetectiveAndAbove]
     public async Task<ActionResult<Case>> GetCase(int id)
     {
         var @case = await _context.Cases
@@ -50,13 +55,18 @@ public class CasesController : ControllerBase
     }
 
     /// <summary>
-    /// Create a new case
+    /// Create a new case (Admin/Supervisor only)
     /// </summary>
     [HttpPost]
+    [SupervisorAndAbove] // Only Supervisor and Administrator can create cases
     public async Task<ActionResult<Case>> CreateCase(Case @case)
     {
         @case.CreatedAt = DateTime.UtcNow;
         @case.CaseNumber = $"CASE-{DateTime.UtcNow:yyyyMMdd}-{Random.Shared.Next(1000, 9999)}";
+        
+        // Set creator from current user
+        var username = User.Identity?.Name;
+        @case.CreatedBy = username;
         
         _context.Cases.Add(@case);
         await _context.SaveChangesAsync();
@@ -65,9 +75,10 @@ public class CasesController : ControllerBase
     }
 
     /// <summary>
-    /// Update an existing case
+    /// Update an existing case (Admin/Supervisor only)
     /// </summary>
     [HttpPut("{id}")]
+    [SupervisorAndAbove]
     public async Task<IActionResult> UpdateCase(int id, Case @case)
     {
         if (id != @case.CaseId)
@@ -95,9 +106,10 @@ public class CasesController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a case
+    /// Delete a case (Admin only)
     /// </summary>
     [HttpDelete("{id}")]
+    [AdminOnly] // Only Admin can delete cases
     public async Task<IActionResult> DeleteCase(int id)
     {
         var @case = await _context.Cases.FindAsync(id);
