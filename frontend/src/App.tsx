@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuthStore, initializeAuth } from './store/authStore';
 import { ToastProvider } from './components/ToastProvider';
 import ProtectedRoute from './components/ProtectedRoute';
+import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
@@ -37,6 +38,12 @@ const App: React.FC = () => {
         <Router>
           <div className="App">
             <Routes>
+            {/* Page d'accueil */}
+            <Route 
+              path="/" 
+              element={<HomePage />} 
+            />
+            
             {/* Routes publiques */}
             <Route 
               path="/login" 
