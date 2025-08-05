@@ -185,15 +185,15 @@ public class EvidenceController : ControllerBase
     /// </summary>
     [HttpGet("requiring-analysis")]
     [AnalystAndAbove]
-    public async Task<ActionResult<IEnumerable<Evidence>>> GetEvidenceRequiringAnalysis()
+    public async Task<ActionResult<IEnumerable<EvidenceDto>>> GetEvidenceRequiringAnalysis()
     {
         var evidence = await _context.Evidences
-            .Include(e => e.Case)
             .Where(e => e.RequiresAnalysis && e.IsAvailable)
             .OrderBy(e => e.CollectedAt)
             .ToListAsync();
 
-        return Ok(evidence);
+        var evidenceDtos = evidence.Select(MappingService.ToDto).ToList();
+        return Ok(evidenceDtos);
     }
 }
 

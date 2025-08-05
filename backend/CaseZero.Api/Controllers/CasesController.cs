@@ -42,12 +42,9 @@ public class CasesController : ControllerBase
     /// </summary>
     [HttpGet("{id}")]
     [DetectiveAndAbove]
-    public async Task<ActionResult<Case>> GetCase(int id)
+    public async Task<ActionResult<CaseDto>> GetCase(int id)
     {
         var @case = await _context.Cases
-            .Include(c => c.Evidences)
-            .Include(c => c.CaseLocations)
-            .Include(c => c.TimelineEvents)
             .FirstOrDefaultAsync(c => c.CaseId == id);
 
         if (@case == null)
@@ -55,7 +52,8 @@ public class CasesController : ControllerBase
             return NotFound();
         }
 
-        return Ok(@case);
+        var caseDto = MappingService.ToDto(@case);
+        return Ok(caseDto);
     }
 
     /// <summary>
@@ -63,7 +61,7 @@ public class CasesController : ControllerBase
     /// </summary>
     [HttpPost]
     [SupervisorAndAbove] // Only Supervisor and Administrator can create cases
-    public async Task<ActionResult<Case>> CreateCase(Case @case)
+    public async Task<ActionResult<CaseDto>> CreateCase(Case @case)
     {
         @case.CreatedAt = DateTime.UtcNow;
         @case.CaseNumber = $"CASE-{DateTime.UtcNow:yyyyMMdd}-{Random.Shared.Next(1000, 9999)}";
@@ -75,7 +73,8 @@ public class CasesController : ControllerBase
         _context.Cases.Add(@case);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetCase), new { id = @case.CaseId }, @case);
+        var caseDto = MappingService.ToDto(@case);
+        return CreatedAtAction(nameof(GetCase), new { id = @case.CaseId }, caseDto);
     }
 
     /// <summary>
