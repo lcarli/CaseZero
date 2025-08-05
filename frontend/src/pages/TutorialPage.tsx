@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useToast } from '../components/ToastProvider';
+import { caseService, evidenceService } from '../services/api';
+import { Case, Evidence as ApiEvidence } from '../types/api';
 import LanguageSwitcher from '../components/ui/LanguageSwitcher';
 
 interface TutorialStep {
@@ -11,29 +13,13 @@ interface TutorialStep {
   completed: boolean;
 }
 
-interface Evidence {
-  id: string;
-  name: string;
-  description: string;
-  examined: boolean;
-  requiresAnalysis?: boolean;
-  analysisType?: string;
-  analysisCompleted?: boolean;
-}
-
-interface Suspect {
-  id: string;
-  name: string;
-  role: string;
-  description: string;
-}
-
 const TutorialPage: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useAuthStore();
   const { addToast } = useToast();
   const navigate = useNavigate();
 
+  // Tutorial state
   const [currentStep, setCurrentStep] = useState(1);
   const [tutorialSteps, setTutorialSteps] = useState<TutorialStep[]>([
     { id: 1, type: 'briefing', completed: false },
@@ -42,106 +28,63 @@ const TutorialPage: React.FC = () => {
     { id: 4, type: 'solution', completed: false }
   ]);
 
-  const [evidences, setEvidences] = useState<Evidence[]>([
-    {
-      id: 'manager-report',
-      name: t('tutorial.evidence.managerReport'),
-      description: 'Relatório oficial da descoberta do furto às 14h30',
-      examined: false
-    },
-    {
-      id: 'cash-photo',
-      name: t('tutorial.evidence.cashRegisterPhoto'),
-      description: 'Foto do caixa após a descoberta, sem sinais de arrombamento',
-      examined: false
-    },
-    {
-      id: 'employee-list',
-      name: t('tutorial.evidence.employeeList'),
-      description: 'Lista dos funcionários que têm acesso ao caixa',
-      examined: false
-    },
-    {
-      id: 'security-footage',
-      name: t('tutorial.evidence.securityFootage'),
-      description: 'Gravação da câmera de segurança do período 13h00-15h00',
-      examined: false,
-      requiresAnalysis: true,
-      analysisType: 'video',
-      analysisCompleted: false
-    },
-    {
-      id: 'fingerprints',
-      name: t('tutorial.evidence.fingerprints'),
-      description: 'Impressões digitais coletadas da gaveta do caixa',
-      examined: false,
-      requiresAnalysis: true,
-      analysisType: 'fingerprint',
-      analysisCompleted: false
-    }
-  ]);
+  // Case data from backend
+  const [tutorialCase, setTutorialCase] = useState<Case | null>(null);
+  const [caseEvidences, setCaseEvidences] = useState<ApiEvidence[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const [suspects] = useState<Suspect[]>([
-    {
-      id: 'joao',
-      name: t('tutorial.suspects.joao.name'),
-      role: t('tutorial.suspects.joao.role'),
-      description: t('tutorial.suspects.joao.description')
-    },
-    {
-      id: 'maria',
-      name: t('tutorial.suspects.maria.name'),
-      role: t('tutorial.suspects.maria.role'),
-      description: t('tutorial.suspects.maria.description')
-    },
-    {
-      id: 'pedro',
-      name: t('tutorial.suspects.pedro.name'),
-      role: t('tutorial.suspects.pedro.role'),
-      description: t('tutorial.suspects.pedro.description')
-    }
-  ]);
-
-  const [selectedSuspect, setSelectedSuspect] = useState<string>('');
-  const [selectedEvidence, setSelectedEvidence] = useState<string>('');
+  // Tutorial progress state (track which evidences are examined)
+  const [examinedEvidences, setExaminedEvidences] = useState<Set<number>>(new Set());
+  const [completedAnalyses, setCompletedAnalyses] = useState<Set<number>>(new Set());
   const [showSolution, setShowSolution] = useState(false);
 
-  const handleEvidenceExamine = (evidenceId: string) => {
-    setEvidences(prev => 
-      prev.map(evidence => 
-        evidence.id === evidenceId 
-          ? { ...evidence, examined: true }
-          : evidence
-      )
-    );
+  // Load tutorial case data from backend
+  useEffect(() => {
+    const loadTutorialData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        // Get tutorial case
+        const caseData = await caseService.getTutorialCase();
+        setTutorialCase(caseData);
+        
+        // Get case evidences
+        const evidences = await evidenceService.getEvidenceByCase(caseData.caseId);
+        setCaseEvidences(evidences);
+        
+      } catch (err: any) {
+        console.error('Error loading tutorial data:', err);
+        setError('Erro ao carregar dados do tutorial');
+        addToast('Erro ao carregar tutorial', 'error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTutorialData();
+  }, [addToast]);
+
+  const handleEvidenceExamine = (evidenceId: number) => {
+    setExaminedEvidences(prev => new Set([...prev, evidenceId]));
     addToast(t('tutorial.messages.evidenceExamined'), 'success');
   };
 
-  const handleAnalysisRequest = (evidenceId: string) => {
-    setEvidences(prev => 
-      prev.map(evidence => 
-        evidence.id === evidenceId 
-          ? { ...evidence, analysisCompleted: true }
-          : evidence
-      )
-    );
+  const handleAnalysisRequest = (evidenceId: number) => {
+    setCompletedAnalyses(prev => new Set([...prev, evidenceId]));
     addToast(t('tutorial.messages.analysisRequested'), 'success');
   };
 
   const handleSubmitSolution = () => {
-    if (selectedSuspect === 'maria' && selectedEvidence === 'security-footage') {
-      setShowSolution(true);
-      addToast(t('tutorial.messages.correctAnswer'), 'success');
-      // Marcar tutorial como completo
-      setTutorialSteps(prev => 
-        prev.map(step => ({ ...step, completed: true }))
-      );
-    } else {
-      addToast(t('tutorial.messages.wrongAnswer'), 'error');
-      if (!selectedEvidence.includes('security')) {
-        addToast(t('tutorial.messages.hint'), 'info');
-      }
-    }
+    // Para simplificar, vamos aceitar qualquer solução por enquanto
+    // até que tenhamos os dados dos suspeitos corretos do backend
+    setShowSolution(true);
+    addToast(t('tutorial.messages.correctAnswer'), 'success');
+    // Marcar tutorial como completo
+    setTutorialSteps(prev => 
+      prev.map(step => ({ ...step, completed: true }))
+    );
   };
 
   const handleFinishTutorial = () => {
@@ -174,9 +117,9 @@ const TutorialPage: React.FC = () => {
       case 1:
         return true; // Briefing sempre pode avançar
       case 2:
-        return evidences.filter(e => e.examined).length >= 3; // Pelo menos 3 evidências examinadas
+        return examinedEvidences.size >= 3; // Pelo menos 3 evidências examinadas
       case 3:
-        return evidences.filter(e => e.requiresAnalysis && e.analysisCompleted).length >= 1; // Pelo menos 1 análise completa
+        return completedAnalyses.size >= 1; // Pelo menos 1 análise completa
       case 4:
         return showSolution; // Só pode avançar se resolveu corretamente
       default:
@@ -244,11 +187,11 @@ const TutorialPage: React.FC = () => {
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {evidences.map((evidence) => (
+                {caseEvidences.map((evidence) => (
                   <div
-                    key={evidence.id}
+                    key={evidence.evidenceId}
                     className={`group relative bg-slate-700/50 border rounded-xl p-6 transition-all duration-300 hover:shadow-lg ${
-                      evidence.examined 
+                      examinedEvidences.has(evidence.evidenceId)
                         ? 'border-emerald-500/50 bg-emerald-500/10' 
                         : 'border-slate-600/50 hover:border-indigo-500/50'
                     }`}
@@ -257,7 +200,7 @@ const TutorialPage: React.FC = () => {
                       <h4 className="text-lg font-semibold text-white">
                         {evidence.name}
                       </h4>
-                      {evidence.examined && (
+                      {examinedEvidences.has(evidence.evidenceId) && (
                         <svg className="w-6 h-6 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                         </svg>
@@ -280,15 +223,15 @@ const TutorialPage: React.FC = () => {
                     )}
 
                     <button
-                      onClick={() => handleEvidenceExamine(evidence.id)}
-                      disabled={evidence.examined}
+                      onClick={() => handleEvidenceExamine(evidence.evidenceId)}
+                      disabled={examinedEvidences.has(evidence.evidenceId)}
                       className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
-                        evidence.examined
+                        examinedEvidences.has(evidence.evidenceId)
                           ? 'bg-emerald-500/20 text-emerald-400 cursor-not-allowed'
                           : 'bg-indigo-600 hover:bg-indigo-700 text-white'
                       }`}
                     >
-                      {evidence.examined ? '✓ Examinada' : 'Examinar Evidência'}
+                      {examinedEvidences.has(evidence.evidenceId) ? '✓ Examinada' : 'Examinar Evidência'}
                     </button>
                   </div>
                 ))}
@@ -296,8 +239,8 @@ const TutorialPage: React.FC = () => {
 
               <div className="mt-8 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
                 <p className="text-blue-300 text-sm">
-                  <strong>Progresso:</strong> {evidences.filter(e => e.examined).length} de {evidences.length} evidências examinadas
-                  {evidences.filter(e => e.examined).length >= 3 && ' ✓ Você pode avançar!'}
+                  <strong>Progresso:</strong> {examinedEvidences.size} de {caseEvidences.length} evidências examinadas
+                  {examinedEvidences.size >= 3 && ' ✓ Você pode avançar!'}
                 </p>
               </div>
             </div>
@@ -316,11 +259,11 @@ const TutorialPage: React.FC = () => {
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {evidences.filter(e => e.requiresAnalysis).map((evidence) => (
+                {caseEvidences.filter(e => e.type === 2 || e.type === 3).map((evidence) => (
                   <div
-                    key={evidence.id}
+                    key={evidence.evidenceId}
                     className={`group relative bg-slate-700/50 border rounded-xl p-6 transition-all duration-300 ${
-                      evidence.analysisCompleted 
+                      completedAnalyses.has(evidence.evidenceId)
                         ? 'border-emerald-500/50 bg-emerald-500/10' 
                         : 'border-slate-600/50 hover:border-purple-500/50'
                     }`}
@@ -329,7 +272,7 @@ const TutorialPage: React.FC = () => {
                       <h4 className="text-lg font-semibold text-white">
                         {evidence.name}
                       </h4>
-                      {evidence.analysisCompleted && (
+                      {completedAnalyses.has(evidence.evidenceId) && (
                         <svg className="w-6 h-6 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                         </svg>
@@ -337,34 +280,31 @@ const TutorialPage: React.FC = () => {
                     </div>
                     
                     <p className="text-slate-300 mb-4">
-                      Tipo de análise: {evidence.analysisType === 'video' ? t('tutorial.analysis.video') : t('tutorial.analysis.fingerprint')}
+                      {evidence.description}
                     </p>
 
-                    {evidence.analysisCompleted && (
+                    {completedAnalyses.has(evidence.evidenceId) && (
                       <div className="mb-4 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
                         <p className="text-emerald-300 text-sm">
-                          {evidence.id === 'security-footage' 
-                            ? 'Resultado: Maria Santos vista acessando o caixa às 14h15'
-                            : 'Resultado: Impressões digitais de Maria Santos encontradas na gaveta'
-                          }
+                          Resultado: Análise concluída - evidência analisada com sucesso
                         </p>
                       </div>
                     )}
 
                     <button
-                      onClick={() => handleAnalysisRequest(evidence.id)}
-                      disabled={evidence.analysisCompleted || !evidence.examined}
+                      onClick={() => handleAnalysisRequest(evidence.evidenceId)}
+                      disabled={completedAnalyses.has(evidence.evidenceId) || !examinedEvidences.has(evidence.evidenceId)}
                       className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
-                        evidence.analysisCompleted
+                        completedAnalyses.has(evidence.evidenceId)
                           ? 'bg-emerald-500/20 text-emerald-400 cursor-not-allowed'
-                          : !evidence.examined
+                          : !examinedEvidences.has(evidence.evidenceId)
                           ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
                           : 'bg-purple-600 hover:bg-purple-700 text-white'
                       }`}
                     >
-                      {evidence.analysisCompleted 
+                      {completedAnalyses.has(evidence.evidenceId)
                         ? '✓ Análise Completa' 
-                        : !evidence.examined
+                        : !examinedEvidences.has(evidence.evidenceId)
                         ? 'Examine primeiro a evidência'
                         : 'Solicitar Análise'
                       }
@@ -375,8 +315,8 @@ const TutorialPage: React.FC = () => {
 
               <div className="mt-8 p-4 bg-purple-500/10 border border-purple-500/30 rounded-xl">
                 <p className="text-purple-300 text-sm">
-                  <strong>Progresso:</strong> {evidences.filter(e => e.analysisCompleted).length} de {evidences.filter(e => e.requiresAnalysis).length} análises completas
-                  {evidences.filter(e => e.analysisCompleted).length >= 1 && ' ✓ Você pode avançar!'}
+                  <strong>Progresso:</strong> {completedAnalyses.size} de {caseEvidences.filter(e => e.type === 2 || e.type === 3).length} análises completas
+                  {completedAnalyses.size >= 1 && ' ✓ Você pode avançar!'}
                 </p>
               </div>
             </div>
@@ -394,71 +334,41 @@ const TutorialPage: React.FC = () => {
                 {t('tutorial.steps.step4.description')}
               </p>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Suspects */}
-                <div>
+                            <div className="text-center">
+                <div className="mb-8">
                   <h4 className="text-xl font-semibold text-white mb-4">
-                    {t('tutorial.suspects.title')}
+                    Resumo do Caso
                   </h4>
-                  <div className="space-y-4">
-                    {suspects.map((suspect) => (
+                  {tutorialCase && (
+                    <div className="bg-slate-700/50 border border-slate-600 rounded-xl p-6 mb-6">
+                      <h5 className="text-lg font-semibold text-white mb-2">{tutorialCase.title}</h5>
+                      <p className="text-slate-300">{tutorialCase.description}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mb-8">
+                  <h4 className="text-xl font-semibold text-white mb-4">
+                    Evidências Coletadas
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {caseEvidences.filter(e => examinedEvidences.has(e.evidenceId)).map((evidence) => (
                       <div
-                        key={suspect.id}
-                        className={`p-4 border rounded-xl cursor-pointer transition-all ${
-                          selectedSuspect === suspect.id
-                            ? 'border-indigo-500 bg-indigo-500/10'
-                            : 'border-slate-600 hover:border-slate-500'
-                        }`}
-                        onClick={() => setSelectedSuspect(suspect.id)}
+                        key={evidence.evidenceId}
+                        className="p-4 border border-emerald-500/50 bg-emerald-500/10 rounded-xl"
                       >
-                        <div className="flex items-center justify-between mb-2">
-                          <h5 className="font-semibold text-white">{suspect.name}</h5>
-                          <span className="text-xs bg-slate-700 text-slate-300 px-2 py-1 rounded">
-                            {suspect.role}
-                          </span>
-                        </div>
-                        <p className="text-slate-300 text-sm">{suspect.description}</p>
+                        <h5 className="font-semibold text-white mb-1">{evidence.name}</h5>
+                        <p className="text-emerald-300 text-sm">{evidence.description}</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Evidence Selection */}
-                <div>
-                  <h4 className="text-xl font-semibold text-white mb-4">
-                    Evidência Principal
-                  </h4>
-                  <div className="space-y-4">
-                    {evidences.filter(e => e.examined).map((evidence) => (
-                      <div
-                        key={evidence.id}
-                        className={`p-4 border rounded-xl cursor-pointer transition-all ${
-                          selectedEvidence === evidence.id
-                            ? 'border-purple-500 bg-purple-500/10'
-                            : 'border-slate-600 hover:border-slate-500'
-                        }`}
-                        onClick={() => setSelectedEvidence(evidence.id)}
-                      >
-                        <h5 className="font-semibold text-white mb-2">{evidence.name}</h5>
-                        <p className="text-slate-300 text-sm">{evidence.description}</p>
-                        {evidence.analysisCompleted && (
-                          <span className="inline-block mt-2 text-xs bg-emerald-600 text-white px-2 py-1 rounded">
-                            ✓ Análise Completa
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 flex justify-center">
                 <button
                   onClick={handleSubmitSolution}
-                  disabled={!selectedSuspect || !selectedEvidence}
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-slate-600 disabled:to-slate-600 text-white px-8 py-3 rounded-xl font-medium disabled:cursor-not-allowed transition-all duration-200"
+                  className="px-8 py-3 bg-gradient-to-r from-emerald-600 to-green-600 text-white font-medium rounded-xl hover:from-emerald-700 hover:to-green-700 transition-all duration-300 transform hover:scale-105"
                 >
-                  Submeter Solução
+                  Finalizar Tutorial
                 </button>
               </div>
 
@@ -486,6 +396,50 @@ const TutorialPage: React.FC = () => {
         return null;
     }
   };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-emerald-500 mx-auto mb-4"></div>
+          <p className="text-slate-300">Carregando tutorial...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-white mb-2">Erro ao carregar tutorial</h2>
+          <p className="text-slate-300 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+          >
+            Tentar novamente
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Ensure we have tutorial case data
+  if (!tutorialCase) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-yellow-500 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-white mb-2">Caso tutorial não encontrado</h2>
+          <p className="text-slate-300">Não foi possível carregar os dados do caso tutorial.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">

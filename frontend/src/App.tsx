@@ -11,6 +11,7 @@ import CaseDetailPage from './pages/CaseDetailPage';
 import InvestigationPage from './pages/InvestigationPage';
 import CaseInvestigationPage from './pages/CaseInvestigationPage';
 import TutorialPage from './pages/TutorialPage';
+import CasePage from './pages/CasePage';
 import HomePage from './pages/HomePage';
 import GameTester from './components/GameTester';
 import './i18n';
@@ -69,6 +70,15 @@ const App: React.FC = () => {
               element={
                 <ProtectedRoute>
                   <TutorialPage />
+                </ProtectedRoute>
+              }
+            />
+            
+            <Route
+              path="/case/:caseId"
+              element={
+                <ProtectedRoute>
+                  <CasePage />
                 </ProtectedRoute>
               }
             />
