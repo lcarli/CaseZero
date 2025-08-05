@@ -1,6 +1,77 @@
-@CaseZero.Api_HostAddress = http://localhost:5029
+# CaseZero API - Teste de Autenticação JWT
 
-GET {{CaseZero.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. Registro de novo usuário
+POST http://localhost:5029/api/auth/register
+Content-Type: application/json
 
-###
+{
+  "email": "detective@casezero.com",
+  "username": "detective1",
+  "password": "Detective123!",
+  "firstName": "João",
+  "lastName": "Silva",
+  "department": "Investigação Criminal"
+}
+
+### 2. Login com usuário admin (criado automaticamente)
+POST http://localhost:5029/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@casezero.com",
+  "password": "Admin123!"
+}
+
+### 3. Login com usuário detective
+POST http://localhost:5029/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "detective@casezero.com",
+  "password": "Detective123!"
+}
+
+### 4. Obter perfil do usuário (requer autenticação)
+GET http://localhost:5029/api/auth/profile
+Authorization: Bearer {{token}}
+
+### 5. Listar casos (requer autenticação)
+GET http://localhost:5029/api/cases
+Authorization: Bearer {{token}}
+
+### 6. Obter caso específico (requer autenticação)
+GET http://localhost:5029/api/cases/1
+Authorization: Bearer {{token}}
+
+### 7. Criar novo caso (requer permissão de Supervisor ou Admin)
+POST http://localhost:5029/api/cases
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "title": "Roubo na Joalheria Central",
+  "titleEn": "Central Jewelry Store Robbery",
+  "description": "Uma joalheria foi assaltada no centro da cidade.",
+  "descriptionEn": "A jewelry store was robbed in the city center.",
+  "type": 1,
+  "difficulty": 2,
+  "status": 1,
+  "estimatedTimeMinutes": 45,
+  "isPublished": true,
+  "isTutorial": false,
+  "location": "Rua das Flores, 123",
+  "locationEn": "Flores Street, 123",
+  "tags": "robbery,jewelry,city-center"
+}
+
+### 8. Tentar deletar caso sem permissão (deve falhar)
+DELETE http://localhost:5029/api/cases/1
+Authorization: Bearer {{detective_token}}
+
+### 9. Deletar caso com permissão de admin
+DELETE http://localhost:5029/api/cases/2
+Authorization: Bearer {{admin_token}}
+
+### 10. Logout
+POST http://localhost:5029/api/auth/logout
+Authorization: Bearer {{token}}
