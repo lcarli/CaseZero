@@ -86,7 +86,7 @@ export const caseService = {
     return await CaseStructureService.getCases();
   },
 
-  async getCase(id: number): Promise<Case> {
+  async getCase(id: string | number): Promise<Case> {
     // Utiliser le nouveau service CaseStructure au lieu de l'ancien
     return await CaseStructureService.getCase(id);
   },

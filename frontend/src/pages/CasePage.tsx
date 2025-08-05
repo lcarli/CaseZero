@@ -45,20 +45,34 @@ const CasePage: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
+        console.log('CasePage: Loading case with ID:', caseId);
 
         let caseData: Case;
         
-        // Get case by ID
-        caseData = await caseService.getCase(parseInt(caseId));
+        // Get case by ID (peut être string ou number)
+        console.log('CasePage: Calling caseService.getCase with:', caseId);
+        caseData = await caseService.getCase(caseId);
+        console.log('CasePage: Received case data:', caseData);
         
         setCurrentCase(caseData);
         
-        // Get case evidences
-        const evidences = await evidenceService.getEvidenceByCase(caseData.caseId);
+        // Get case evidences - pour les cases JSON, nous n'avons pas d'evidences séparées
+        // Utiliser l'ID du case tel quel
+        let evidences: ApiEvidence[] = [];
+        try {
+          // Essayer de charger les evidences si c'est un case numérique traditionnel
+          if (typeof caseData.caseId === 'number') {
+            evidences = await evidenceService.getEvidenceByCase(caseData.caseId);
+          }
+        } catch (evidenceError) {
+          // Pas grave si les evidences ne sont pas trouvées pour les cases JSON
+          console.log('No traditional evidences found for this case');
+        }
         setCaseEvidences(evidences);
 
       } catch (err: any) {
         console.error('Error loading case data:', err);
+        console.error('Error details:', err.response?.data || err.message);
         setError('Erro ao carregar dados do caso');
         addToast('Erro ao carregar caso', 'error');
       } finally {

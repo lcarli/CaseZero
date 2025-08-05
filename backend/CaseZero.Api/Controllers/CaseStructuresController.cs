@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using CaseZero.Core.Models;
 using CaseZero.Core.Services;
 
@@ -6,6 +7,7 @@ namespace CaseZero.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[AllowAnonymous] // Temporário para debug
 public class CaseStructuresController : ControllerBase
 {
     private readonly ICaseStructureService _caseStructureService;

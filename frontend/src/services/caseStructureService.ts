@@ -40,8 +40,8 @@ export class CaseStructureService {
   static async getCases(): Promise<Case[]> {
     try {
       const structures = await this.getAllCaseStructures();
-      return structures.map((structure, index) => 
-        CaseStructureAdapter.toCaseFormat(structure, index + 1)
+      return structures.map((structure) => 
+        CaseStructureAdapter.toCaseFormat(structure)
       );
     } catch (error) {
       console.error('Error loading case structures:', error);
@@ -50,19 +50,41 @@ export class CaseStructureService {
   }
 
   /**
-   * Récupère un cas spécifique par son ID numérique (converti)
+   * Récupère un cas spécifique par son ID (string ou number)
    */
-  static async getCase(numericId: number): Promise<Case> {
+  static async getCase(id: string | number): Promise<Case> {
     try {
+      console.log('CaseStructureService.getCase called with ID:', id, 'type:', typeof id);
       const structures = await this.getAllCaseStructures();
-      const originalId = CaseStructureAdapter.findOriginalId(structures, numericId);
+      console.log('CaseStructureService: Available structures:', structures.map(s => s.id));
       
-      if (!originalId) {
-        throw new Error(`Case with ID ${numericId} not found`);
+      let targetStructure: CaseStructure | undefined;
+      
+      if (typeof id === 'string') {
+        // ID de string direct - chercher par ID exact
+        targetStructure = structures.find(structure => structure.id === id);
+        console.log('CaseStructureService: Looking for string ID:', id, 'found:', !!targetStructure);
+      } else {
+        // ID numérique - trouver l'ID original correspondant
+        const originalId = CaseStructureAdapter.findOriginalId(structures, id);
+        console.log('CaseStructureService: Looking for numeric ID:', id, 'mapped to:', originalId);
+        if (originalId) {
+          targetStructure = structures.find(structure => structure.id === originalId);
+        }
+      }
+      
+      if (!targetStructure) {
+        console.error('CaseStructureService: Case not found for ID:', id);
+        throw new Error(`Case with ID ${id} not found`);
       }
 
-      const structure = await this.getCaseStructure(originalId);
-      return CaseStructureAdapter.toCaseFormat(structure, numericId);
+      // Récupérer la structure complète et l'adapter
+      console.log('CaseStructureService: Loading complete structure for:', targetStructure.id);
+      const completeStructure = await this.getCaseStructure(targetStructure.id);
+      console.log('CaseStructureService: Complete structure loaded:', completeStructure);
+      const adaptedCase = CaseStructureAdapter.toCaseFormat(completeStructure);
+      console.log('CaseStructureService: Adapted case:', adaptedCase);
+      return adaptedCase; // Index n'est plus utilisé
     } catch (error) {
       console.error('Error loading case:', error);
       throw new Error('Cas non trouvé');
@@ -81,7 +103,7 @@ export class CaseStructureService {
         throw new Error('No tutorial case found');
       }
 
-      return CaseStructureAdapter.toCaseFormat(tutorialStructure, 1);
+      return CaseStructureAdapter.toCaseFormat(tutorialStructure);
     } catch (error) {
       console.error('Error loading tutorial case:', error);
       throw new Error('Cas tutorial non trouvé');
@@ -96,8 +118,8 @@ export class CaseStructureService {
       const structures = await this.getAllCaseStructures();
       const tutorialStructures = structures.filter(s => s.tutorial === true);
       
-      return tutorialStructures.map((structure, index) => 
-        CaseStructureAdapter.toCaseFormat(structure, index + 1)
+      return tutorialStructures.map((structure) => 
+        CaseStructureAdapter.toCaseFormat(structure)
       );
     } catch (error) {
       console.error('Error loading tutorial cases:', error);
@@ -110,7 +132,9 @@ export class CaseStructureService {
    */
   static async getCaseStructure(caseId: string): Promise<CaseStructure> {
     try {
+      console.log('CaseStructureService: Fetching case structure for ID:', caseId);
       const response = await apiClient.get<CaseStructure>(`/casestructures/${caseId}`);
+      console.log('CaseStructureService: Received case structure:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error loading case structure:', error);
@@ -123,10 +147,15 @@ export class CaseStructureService {
    */
   static async getAvailableCaseIds(): Promise<string[]> {
     try {
+      console.log('CaseStructureService: Fetching available case IDs...');
+      console.log('CaseStructureService: Current token:', localStorage.getItem('auth_token') ? 'Present' : 'Missing');
       const response = await apiClient.get<string[]>('/casestructures');
+      console.log('CaseStructureService: Available case IDs:', response.data);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading available cases:', error);
+      console.error('Error status:', error.response?.status);
+      console.error('Error data:', error.response?.data);
       throw new Error('Erreur lors du chargement de la liste des cas');
     }
   }

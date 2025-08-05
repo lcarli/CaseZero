@@ -34,7 +34,7 @@ export interface RegisterRequest {
 
 // Types pour les affaires
 export interface Case {
-  caseId: number;
+  caseId: string | number; // Support des IDs numériques et de string pour compatibilité
   caseNumber: string;
   title: string;
   titleEn: string;

@@ -25,16 +25,31 @@ const CaseDetailPage: React.FC = () => {
       
       try {
         setLoading(true);
-        const [caseResponse, evidencesResponse, sessionsResponse] = await Promise.all([
-          caseService.getCase(parseInt(caseId)),
-          evidenceService.getEvidenceByCase(parseInt(caseId)),
-          sessionService.getSessionsByCase(parseInt(caseId))
-        ]);
+        console.log('CaseDetailPage: Loading case with ID:', caseId);
+        
+        // Não fazer parseInt - aceitar IDs de string também
+        const caseResponse = await caseService.getCase(caseId);
+        console.log('CaseDetailPage: Received case data:', caseResponse);
+        
+        // Para evidences e sessions, só tentar se for um ID numérico
+        let evidencesResponse: Evidence[] = [];
+        let sessionsResponse: InvestigationSession[] = [];
+        
+        if (!isNaN(Number(caseId))) {
+          // ID numérico - carregar evidences e sessions tradicionais
+          const [evidences, sessions] = await Promise.all([
+            evidenceService.getEvidenceByCase(parseInt(caseId)),
+            sessionService.getSessionsByCase(parseInt(caseId))
+          ]);
+          evidencesResponse = evidences;
+          sessionsResponse = sessions;
+        }
         
         setCaseData(caseResponse);
         setEvidences(evidencesResponse);
         setSessions(sessionsResponse);
       } catch (err: any) {
+        console.error('CaseDetailPage error:', err);
         setError(err.response?.data?.message || 'Erreur lors du chargement de l\'affaire');
       } finally {
         setLoading(false);
@@ -49,18 +64,27 @@ const CaseDetailPage: React.FC = () => {
     
     try {
       setStartingSession(true);
-      const session = await sessionService.createSession({
-        caseId: caseData.caseId,
-        userId: user.userId,
-        startedAt: new Date().toISOString(),
-        status: 1 // En cours
-      });
       
-      addToast('Enquête démarrée avec succès !', 'success');
-      navigate(`/investigation/${session.sessionId}`);
+      // Seulement créer une session si c'est un case avec ID numérique
+      if (typeof caseData.caseId === 'number') {
+        const session = await sessionService.createSession({
+          caseId: caseData.caseId,
+          userId: user.userId,
+          startedAt: new Date().toISOString(),
+          status: 1 // En cours
+        });
+        
+        addToast('Enquête démarrée avec succès !', 'success');
+        navigate(`/investigation/${session.sessionId}`);
+      } else {
+        // Pour les cases JSON, naviguer directement vers la page du case
+        addToast('Ouverture du cas...', 'success');
+        navigate(`/cases/${caseData.caseId}/investigation`);
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Erreur lors du démarrage de l\'enquête');
       addToast('Erreur lors du démarrage de l\'enquête', 'error');
+    } finally {
       setStartingSession(false);
     }
   };

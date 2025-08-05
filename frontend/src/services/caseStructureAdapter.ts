@@ -8,7 +8,7 @@ export class CaseStructureAdapter {
   /**
    * Convertit une CaseStructure en Case pour compatibilité avec l'UI existante
    */
-  static toCaseFormat(structure: CaseStructure, index: number = 1): Case {
+  static toCaseFormat(structure: CaseStructure): Case {
     // Déterminer la langue à utiliser (priorité: fr, pt, en, es)
     const getLocalizedText = (textObj: any): string => {
       return textObj.fr || textObj.pt || textObj.en || textObj.es || '';
@@ -35,7 +35,7 @@ export class CaseStructureAdapter {
     }
 
     return {
-      caseId: index, // Utiliser un index numérique pour compatibilité
+      caseId: structure.id, // Utiliser l'ID de string réel du JSON
       caseNumber: `CASE-JSON-${structure.id.toUpperCase()}`,
       title: getLocalizedText(structure.title),
       titleEn: getLocalizedTextEn(structure.title),
