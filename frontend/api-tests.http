@@ -1,36 +1,41 @@
-### Test de connexion
-POST http://localhost:5030/api/auth/login
+@baseUrl = http://localhost:5030/api
+@email = admin@casezero.com
+@password = CaseZero123!
+
+### Test de connexion (capture le token)
+# @name login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@casezero.com",
-  "password": "CaseZero123!"
+  "email": "{{email}}",
+  "password": "{{password}}"
 }
 
 ### Test récupération des utilisateurs (avec token)
-GET http://localhost:5030/api/users
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/users
+Authorization: Bearer {{login.response.body.token}}
 
 ### Test récupération des affaires
-GET http://localhost:5030/api/cases
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/cases
+Authorization: Bearer {{login.response.body.token}}
 
 ### Test récupération d'une affaire spécifique
-GET http://localhost:5030/api/cases/1
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/cases/1
+Authorization: Bearer {{login.response.body.token}}
 
 ### Test récupération des preuves d'une affaire
-GET http://localhost:5030/api/evidence/case/1
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/evidence/case/1
+Authorization: Bearer {{login.response.body.token}}
 
 ### Test récupération des sessions d'une affaire
-GET http://localhost:5030/api/sessions/case/1
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/sessions/case/1
+Authorization: Bearer {{login.response.body.token}}
 
 ### Test de création de session
-POST http://localhost:5030/api/sessions
+POST {{baseUrl}}/sessions
 Content-Type: application/json
-Authorization: Bearer {{token}}
+Authorization: Bearer {{login.response.body.token}}
 
 {
   "caseId": 1,
@@ -38,3 +43,16 @@ Authorization: Bearer {{token}}
   "startedAt": "2024-01-20T10:00:00Z",
   "status": 1
 }
+
+### Test récupération du cas tutorial
+GET {{baseUrl}}/cases/tutorial
+Authorization: Bearer {{login.response.body.token}}
+
+### Test récupération des types d'évidence
+GET {{baseUrl}}/evidence/types
+Authorization: Bearer {{login.response.body.token}}
+
+### Alternative: Test avec token manuel (si la capture automatique ne fonctionne pas)
+### Remplacez YOUR_TOKEN_HERE par le token reçu du login
+# GET {{baseUrl}}/cases
+# Authorization: Bearer YOUR_TOKEN_HERE

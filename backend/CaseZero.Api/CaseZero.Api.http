@@ -1,51 +1,59 @@
 # CaseZero API - Teste de Autenticação JWT
 
+@baseUrl = http://localhost:5029/api
+@adminEmail = admin@casezero.com
+@adminPassword = CaseZero123!
+@detectiveEmail = detective@casezero.com
+@detectivePassword = Detective123!
+
 ### 1. Registro de novo usuário
-POST http://localhost:5029/api/auth/register
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
-  "email": "detective@casezero.com",
+  "email": "{{detectiveEmail}}",
   "username": "detective1",
-  "password": "Detective123!",
+  "password": "{{detectivePassword}}",
   "firstName": "João",
   "lastName": "Silva",
   "department": "Investigação Criminal"
 }
 
 ### 2. Login com usuário admin (criado automaticamente)
-POST http://localhost:5029/api/auth/login
+# @name adminLogin
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@casezero.com",
-  "password": "CaseZero123!"
+  "email": "{{adminEmail}}",
+  "password": "{{adminPassword}}"
 }
 
 ### 3. Login com usuário detective
-POST http://localhost:5029/api/auth/login
+# @name detectiveLogin
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "detective@casezero.com",
-  "password": "Detective123!"
+  "email": "{{detectiveEmail}}",
+  "password": "{{detectivePassword}}"
 }
 
 ### 4. Obter perfil do usuário (requer autenticação)
-GET http://localhost:5029/api/auth/profile
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{detectiveLogin.response.body.token}}
 
 ### 5. Listar casos (requer autenticação)
-GET http://localhost:5029/api/cases
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/cases
+Authorization: Bearer {{detectiveLogin.response.body.token}}
 
 ### 6. Obter caso específico (requer autenticação)
-GET http://localhost:5029/api/cases/1
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/cases/1
+Authorization: Bearer {{detectiveLogin.response.body.token}}
 
 ### 7. Criar novo caso (requer permissão de Supervisor ou Admin)
-POST http://localhost:5029/api/cases
-Authorization: Bearer {{admin_token}}
+POST {{baseUrl}}/cases
+Authorization: Bearer {{adminLogin.response.body.token}}
 Content-Type: application/json
 
 {
@@ -61,16 +69,16 @@ Content-Type: application/json
 ### === EVIDENCE ENDPOINTS ===
 
 ### 8. Listar evidências de um caso
-GET http://localhost:5029/api/evidence/case/1
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/evidence/case/1
+Authorization: Bearer {{detectiveLogin.response.body.token}}
 
 ### 9. Obter evidência específica
-GET http://localhost:5029/api/evidence/1
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/evidence/1
+Authorization: Bearer {{detectiveLogin.response.body.token}}
 
 ### 10. Criar nova evidência (requer permissão de Analyst ou superior)
-POST http://localhost:5029/api/evidence
-Authorization: Bearer {{admin_token}}
+POST {{baseUrl}}/evidence
+Authorization: Bearer {{adminLogin.response.body.token}}
 Content-Type: application/json
 
 {
@@ -94,8 +102,8 @@ Content-Type: application/json
 }
 
 ### 11. Atualizar evidência
-PUT http://localhost:5029/api/evidence/1
-Authorization: Bearer {{admin_token}}
+PUT {{baseUrl}}/evidence/1
+Authorization: Bearer {{adminLogin.response.body.token}}
 Content-Type: application/json
 
 {
@@ -118,30 +126,30 @@ Content-Type: application/json
 }
 
 ### 12. Alternar disponibilidade da evidência
-POST http://localhost:5029/api/evidence/1/toggle-availability
-Authorization: Bearer {{admin_token}}
+POST {{baseUrl}}/evidence/1/toggle-availability
+Authorization: Bearer {{adminLogin.response.body.token}}
 
 ### 13. Listar evidências que requerem análise
-GET http://localhost:5029/api/evidence/requiring-analysis
-Authorization: Bearer {{admin_token}}
+GET {{baseUrl}}/evidence/requiring-analysis
+Authorization: Bearer {{adminLogin.response.body.token}}
 
 ### === ANALYSIS ENDPOINTS ===
 
 ### 14. Listar todas as análises
-GET http://localhost:5029/api/analysis
-Authorization: Bearer {{admin_token}}
+GET {{baseUrl}}/analysis
+Authorization: Bearer {{adminLogin.response.body.token}}
 
 ### 15. Obter análise específica
-GET http://localhost:5029/api/analysis/1
-Authorization: Bearer {{admin_token}}
+GET {{baseUrl}}/analysis/1
+Authorization: Bearer {{adminLogin.response.body.token}}
 
 ### 16. Listar análises de uma evidência
-GET http://localhost:5029/api/analysis/evidence/1
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/analysis/evidence/1
+Authorization: Bearer {{detectiveLogin.response.body.token}}
 
 ### 17. Criar nova solicitação de análise
-POST http://localhost:5029/api/analysis
-Authorization: Bearer {{admin_token}}
+POST {{baseUrl}}/analysis
+Authorization: Bearer {{adminLogin.response.body.token}}
 Content-Type: application/json
 
 {
@@ -153,8 +161,8 @@ Content-Type: application/json
 }
 
 ### 18. Atualizar resultado da análise
-PUT http://localhost:5029/api/analysis/1
-Authorization: Bearer {{admin_token}}
+PUT {{baseUrl}}/analysis/1
+Authorization: Bearer {{adminLogin.response.body.token}}
 Content-Type: application/json
 
 {
@@ -165,26 +173,26 @@ Content-Type: application/json
 }
 
 ### 19. Listar análises pendentes
-GET http://localhost:5029/api/analysis/pending
-Authorization: Bearer {{admin_token}}
+GET {{baseUrl}}/analysis/pending
+Authorization: Bearer {{adminLogin.response.body.token}}
 
 ### 20. Listar análises por status (1=Pending, 2=Completed, 3=InProgress)
-GET http://localhost:5029/api/analysis/status/2
-Authorization: Bearer {{admin_token}}
+GET {{baseUrl}}/analysis/status/2
+Authorization: Bearer {{adminLogin.response.body.token}}
 
 ### === USER MANAGEMENT ===
 
 ### 21. Listar todos os usuários (Admin only)
-GET http://localhost:5029/api/users
-Authorization: Bearer {{admin_token}}
+GET {{baseUrl}}/users
+Authorization: Bearer {{adminLogin.response.body.token}}
 
 ### 22. Obter usuário específico (Admin only)
-GET http://localhost:5029/api/users/1
-Authorization: Bearer {{admin_token}}
+GET {{baseUrl}}/users/1
+Authorization: Bearer {{adminLogin.response.body.token}}
 
 ### 23. Atualizar perfil de usuário
-PUT http://localhost:5029/api/users/2
-Authorization: Bearer {{admin_token}}
+PUT {{baseUrl}}/users/2
+Authorization: Bearer {{adminLogin.response.body.token}}
 Content-Type: application/json
 
 {
@@ -195,14 +203,14 @@ Content-Type: application/json
 }
 
 ### 24. Desativar usuário (Admin only)
-DELETE http://localhost:5029/api/users/2
-Authorization: Bearer {{admin_token}}
+DELETE {{baseUrl}}/users/2
+Authorization: Bearer {{adminLogin.response.body.token}}
 
 ### === INVESTIGATION SESSION ENDPOINTS ===
 
 ### 25. Iniciar nova sessão de investigação
-POST http://localhost:5029/api/investigationsession/start
-Authorization: Bearer {{token}}
+POST {{baseUrl}}/investigationsession/start
+Authorization: Bearer {{detectiveLogin.response.body.token}}
 Content-Type: application/json
 
 {
@@ -211,16 +219,16 @@ Content-Type: application/json
 }
 
 ### 26. Listar minhas sessões de investigação
-GET http://localhost:5029/api/investigationsession/my-sessions
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/investigationsession/my-sessions
+Authorization: Bearer {{detectiveLogin.response.body.token}}
 
 ### 27. Obter sessão específica
-GET http://localhost:5029/api/investigationsession/1
-Authorization: Bearer {{token}}
+GET {{baseUrl}}/investigationsession/1
+Authorization: Bearer {{detectiveLogin.response.body.token}}
 
 ### 28. Atualizar progresso da sessão
-PUT http://localhost:5029/api/investigationsession/1/progress
-Authorization: Bearer {{token}}
+PUT {{baseUrl}}/investigationsession/1/progress
+Authorization: Bearer {{detectiveLogin.response.body.token}}
 Content-Type: application/json
 
 {
@@ -232,8 +240,8 @@ Content-Type: application/json
 }
 
 ### 29. Finalizar sessão de investigação
-POST http://localhost:5029/api/investigationsession/1/end
-Authorization: Bearer {{token}}
+POST {{baseUrl}}/investigationsession/1/end
+Authorization: Bearer {{detectiveLogin.response.body.token}}
 Content-Type: application/json
 
 {
@@ -242,18 +250,33 @@ Content-Type: application/json
 }
 
 ### 30. Listar todas as sessões (Admin/Supervisor only)
-GET http://localhost:5029/api/investigationsession
-Authorization: Bearer {{admin_token}}
+GET {{baseUrl}}/investigationsession
+Authorization: Bearer {{adminLogin.response.body.token}}
 
 ### 31. Listar sessões por caso (Admin/Supervisor only)
-GET http://localhost:5029/api/investigationsession/case/1
-Authorization: Bearer {{admin_token}}
+GET {{baseUrl}}/investigationsession/case/1
+Authorization: Bearer {{adminLogin.response.body.token}}
 
 ### 32. Obter estatísticas das sessões (Admin/Supervisor only)
-GET http://localhost:5029/api/investigationsession/statistics
-Authorization: Bearer {{admin_token}}
+GET {{baseUrl}}/investigationsession/statistics
+Authorization: Bearer {{adminLogin.response.body.token}}
 
-### === VARIABLES FOR TESTING ===
-# Après faire login avec admin, copie le token pour usar nos endpoints protegidos
-# @admin_token = YOUR_ADMIN_TOKEN_HERE
-# @token = YOUR_USER_TOKEN_HERE
+### === TUTORIAL SPECIFIC ENDPOINTS ===
+
+### 33. Obter caso tutorial
+GET {{baseUrl}}/cases/tutorial
+Authorization: Bearer {{detectiveLogin.response.body.token}}
+
+### === ALTERNATIVAS COM TOKEN MANUAL ===
+# Se a captura automática não funcionar, execute o login e copie o token:
+# Exemplo: Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+### Login manual - copie o token da resposta
+# POST {{baseUrl}}/auth/login
+# Content-Type: application/json
+# {
+#   "email": "admin@casezero.com",
+#   "password": "CaseZero123!"
+# }
+
+# Então use: Authorization: Bearer SEU_TOKEN_AQUI

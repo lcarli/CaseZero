@@ -51,7 +51,8 @@ const TutorialPage: React.FC = () => {
         setTutorialCase(caseData);
         
         // Get case evidences
-        const evidences = await evidenceService.getEvidenceByCase(caseData.caseId);
+        const caseId = typeof caseData.caseId === 'string' ? parseInt(caseData.caseId) : caseData.caseId;
+        const evidences = await evidenceService.getEvidenceByCase(caseId);
         setCaseEvidences(evidences);
         
       } catch (err: any) {
