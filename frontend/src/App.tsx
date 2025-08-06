@@ -78,7 +78,7 @@ const App: React.FC = () => {
               path="/case/:caseId"
               element={
                 <ProtectedRoute>
-                  <CasePage />
+                  <CaseDetailPage />
                 </ProtectedRoute>
               }
             />
@@ -87,7 +87,7 @@ const App: React.FC = () => {
               path="/cases/:caseId"
               element={
                 <ProtectedRoute>
-                  <CaseDetailPage />
+                  <CasePage />
                 </ProtectedRoute>
               }
             />

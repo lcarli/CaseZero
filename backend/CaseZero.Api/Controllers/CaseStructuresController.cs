@@ -7,7 +7,7 @@ namespace CaseZero.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[AllowAnonymous] // Temporário para debug
+[Authorize] // Autenticação necessária
 public class CaseStructuresController : ControllerBase
 {
     private readonly ICaseStructureService _caseStructureService;
