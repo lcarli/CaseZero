@@ -308,3 +308,11 @@ const processTimeUpdate = useCallback((deltaTime: number) => {
 ---
 
 **Próximo**: [06-evidence-analysis.md](06-evidence-analysis.md) - Sistema de Análise de Evidências
+
+---
+
+
+[**retornar ao índice**](./README.md)
+
+
+---

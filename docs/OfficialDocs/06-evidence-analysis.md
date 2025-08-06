@@ -422,3 +422,15 @@ class AnalysisProcessor {
 ---
 
 **Próximo**: [07-case-management.md](07-case-management.md) - Sistema de Gerenciamento de Casos
+
+---
+
+
+[**retornar ao índice**](./README.md)
+
+
+---
+
+**Versão**: 1.0.0  
+**Última atualização**: Agosto 2025  
+**Autor**: Equipe CaseZero

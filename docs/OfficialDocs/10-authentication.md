@@ -898,3 +898,15 @@ export class CasesController {
 ---
 
 **Próximo**: [11-user-profiles.md](11-user-profiles.md) - Perfis de Usuário
+
+---
+
+
+[**retornar ao índice**](./README.md)
+
+
+---
+
+**Versão**: 1.0.0  
+**Última atualização**: Agosto 2025  
+**Autor**: Equipe CaseZero

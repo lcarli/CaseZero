@@ -660,3 +660,15 @@ interface AnalysisOption {
 ---
 
 **Próximo**: [09-evidence-management.md](09-evidence-management.md) - Gerenciamento de Evidências
+
+---
+
+
+[**retornar ao índice**](./README.md)
+
+
+---
+
+**Versão**: 1.0.0  
+**Última atualização**: Agosto 2025  
+**Autor**: Equipe CaseZero

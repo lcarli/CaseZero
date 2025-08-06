@@ -312,6 +312,12 @@ Para entender melhor o sistema, recomendamos a leitura sequencial dos seguintes 
 
 ---
 
+
+[**retornar ao índice**](./README.md)
+
+
+---
+
 **Versão**: 1.0.0  
 **Última atualização**: Agosto 2025  
 **Autor**: Equipe CaseZero

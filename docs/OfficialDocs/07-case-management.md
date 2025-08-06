@@ -521,3 +521,15 @@ interface Case {
 ---
 
 **Próximo**: [08-user-interface.md](08-user-interface.md) - Interface do Usuário e UX
+
+---
+
+
+[**retornar ao índice**](./README.md)
+
+
+---
+
+**Versão**: 1.0.0  
+**Última atualização**: Agosto 2025  
+**Autor**: Equipe CaseZero

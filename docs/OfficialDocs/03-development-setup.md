@@ -883,6 +883,12 @@ Se tiver problemas com a configuração:
 
 ---
 
+
+[**retornar ao índice**](./README.md)
+
+
+---
+
 **Versão**: 1.0.0  
 **Última atualização**: Agosto 2025  
 **Autor**: Equipe CaseZero
