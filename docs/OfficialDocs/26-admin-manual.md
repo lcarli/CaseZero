@@ -1316,3 +1316,5 @@ const emergencyContacts = {
 **Última atualização:** Agosto 2025  
 **Versão:** 1.0  
 **Próxima revisão:** Setembro 2025
+
+[**Retornar ao índice**](./README.md)

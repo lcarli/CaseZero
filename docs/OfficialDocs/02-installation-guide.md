@@ -502,7 +502,7 @@ Se encontrar problemas durante a instalação:
 ---
 
 
-[**retornar ao índice**](./README.md)
+[**Retornar ao índice**](./README.md)
 
 
 ---

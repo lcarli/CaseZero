@@ -1506,7 +1506,7 @@ export const ResponsiveProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 ---
 
 
-[**retornar ao índice**](./README.md)
+[**Retornar ao índice**](./README.md)
 
 
 ---

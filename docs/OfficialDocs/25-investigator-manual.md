@@ -798,7 +798,7 @@ O sistema permite dividir responsabilidades:
 ---
 
 
-[**retornar ao índice**](./README.md)
+[**Retornar ao índice**](./README.md)
 
 
 ---
@@ -806,3 +806,5 @@ O sistema permite dividir responsabilidades:
 **Versão**: 1.0.0  
 **Última atualização**: Agosto 2025  
 **Autor**: Equipe CaseZero
+
+[**Retornar ao índice**](./README.md)
