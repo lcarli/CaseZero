@@ -18,7 +18,7 @@ Bem-vindo à documentação oficial do CaseZero, um sistema de investigação po
 
 ### 📂 Gerenciamento de Casos
 
-- [**Estrutura de Casos**](./07-case-structure.md) - Como os casos são organizados e definidos
+- [**Estrutura de Casos**](./07-case-management.md) - Como os casos são organizados e definidos
 - [**Criação de Casos**](./08-case-creation.md) - Guia para criar novos casos de investigação
 - [**Gerenciamento de Evidências**](./09-evidence-management.md) - Upload, organização e análise de evidências
 
