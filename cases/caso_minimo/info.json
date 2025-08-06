@@ -1,0 +1,51 @@
+{
+  "id": "caso_minimo",
+  "title": {
+    "pt": "Caso Mínimo - Teste",
+    "en": "Minimal Case - Test",
+    "fr": "Cas Minimal - Test",
+    "es": "Caso Mínimo - Prueba"
+  },
+  "description": {
+    "pt": "",
+    "en": "",
+    "fr": "",
+    "es": ""
+  },
+  "briefing": {
+    "pt": "",
+    "en": "",
+    "fr": "",
+    "es": ""
+  },
+  "culprit": "",
+  "proof_id": {
+    "single": ""
+  },
+  "available_analyses": [],
+  "evidence": [],
+  "suspects": [],
+  "locations": [],
+  "timeline": [],
+  "difficulty": 1,
+  "estimated_time_minutes": 0,
+  "category": "test",
+  "tags": ["test", "minimal"],
+  "prerequisites": [],
+  "learning_objectives": [],
+  "hints": [],
+  "solution": {
+    "summary": {
+      "pt": "",
+      "en": "",
+      "fr": "",
+      "es": ""
+    },
+    "steps": []
+  },
+  "created_at": "2025-08-05T00:00:00Z",
+  "updated_at": "2025-08-05T00:00:00Z",
+  "version": "1.0.0",
+  "author": "System",
+  "status": "active"
+}

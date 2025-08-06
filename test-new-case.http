@@ -1,0 +1,46 @@
+@baseUrl = http://localhost:5029/api
+@adminEmail = admin@casezero.com
+@adminPassword = CaseZero123!
+
+### 1. Login para obter token de admin
+# @name adminLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{adminEmail}}",
+  "password": "{{adminPassword}}"
+}
+
+### 2. Listar casos existentes
+GET {{baseUrl}}/cases
+Authorization: Bearer {{adminLogin.response.body.token}}
+
+### 3. Criar um novo caso básico (apenas com nome)
+POST {{baseUrl}}/cases
+Authorization: Bearer {{adminLogin.response.body.token}}
+Content-Type: application/json
+
+{
+  "title": "Caso Teste Básico",
+  "titleEn": "Basic Test Case",
+  "description": "Caso criado para testar o sistema sem arquivos ou evidências",
+  "descriptionEn": "Case created to test the system without files or evidence",
+  "difficulty": 1,
+  "estimatedTimeMinutes": 30,
+  "isPublished": true,
+  "location": "Teste",
+  "locationEn": "Test"
+}
+
+### 4. Listar casos novamente para ver o novo caso
+GET {{baseUrl}}/cases
+Authorization: Bearer {{adminLogin.response.body.token}}
+
+### 5. Obter detalhes do caso recém-criado (substitua {ID} pelo ID retornado)
+GET {{baseUrl}}/cases/3
+Authorization: Bearer {{adminLogin.response.body.token}}
+
+### 6. Verificar evidências do caso (deve estar vazia)
+GET {{baseUrl}}/evidence/case/3
+Authorization: Bearer {{adminLogin.response.body.token}}
