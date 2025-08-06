@@ -20,7 +20,8 @@ export const TimeSystemModule: React.FC<TimeSystemModuleProps> = ({
   getCurrentGameTime,
   formatGameTime,
 }) => {
-  const currentTime = formatGameTime();
+  // Usar getCurrentGameTime() para garantir que sempre pegue o tempo mais atual
+  const currentTime = formatGameTime(getCurrentGameTime());
   
   // Análises pendentes e completadas
   const pendingAnalyses = timedAnalyses.filter(a => !a.isCompleted);

@@ -2,15 +2,16 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { PoliceSystemState, PoliceSystemActions, PoliceSystemEvent, TimedAnalysis, PoliceModuleType } from '../types/policeSystem';
 
 export const usePoliceSystem = (caseId: string, investigatorName: string) => {
-  // Tempo inicial do jogo (8:00 AM)
-  const GAME_START_HOUR = 8 * 60 * 60 * 1000; // 8:00 AM em milissegundos
   const DEFAULT_TIME_SPEED = 6; // 6x mais rápido que o tempo real
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const [state, setState] = useState<PoliceSystemState>(() => {
     const now = Date.now();
-    const gameStartTime = now + GAME_START_HOUR;
+    // Criar data para hoje às 8:00 AM
+    const today = new Date();
+    today.setHours(8, 0, 0, 0); // 8:00 AM, 0 min, 0 seg, 0 ms
+    const gameStartTime = today.getTime();
     
     return {
       caseId,
@@ -47,11 +48,18 @@ export const usePoliceSystem = (caseId: string, investigatorName: string) => {
     }
 
     intervalRef.current = setInterval(() => {
+      const now = Date.now();
+      
       setState(prevState => {
-        const now = Date.now();
         const realElapsed = now - prevState.gameTime.realStartTime;
         const gameElapsed = realElapsed * prevState.gameTime.timeSpeed;
         const newGameTime = prevState.gameTime.gameStartTime + gameElapsed;
+
+        // Debug: Log para verificar se está acelerando
+        if (Math.floor(now / 1000) % 5 === 0) { // Log a cada 5 segundos
+          console.log(`Debug Time - Real elapsed: ${realElapsed}ms, Game elapsed: ${gameElapsed}ms, Speed: ${prevState.gameTime.timeSpeed}x`);
+          console.log(`Old time: ${new Date(prevState.gameTime.gameTime).toLocaleTimeString()}, New time: ${new Date(newGameTime).toLocaleTimeString()}`);
+        }
 
         // Verificar análises completadas
         const completedAnalyses = prevState.timedAnalyses.filter(
@@ -94,7 +102,7 @@ export const usePoliceSystem = (caseId: string, investigatorName: string) => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [state.gameTime.isPaused, state.gameTime.timeSpeed]);
+  }, [state.gameTime.isPaused]); // Remover timeSpeed das dependências para evitar recriação desnecessária
 
   const addEvent = useCallback((event: Omit<PoliceSystemEvent, 'id' | 'timestamp'>) => {
     setState(prev => ({
@@ -205,7 +213,7 @@ export const usePoliceSystem = (caseId: string, investigatorName: string) => {
       return state.gameTime.gameTime;
     }, [state.gameTime.gameTime]),
 
-    formatGameTime: useCallback((timestamp?: number) => {
+    formatGameTime: (timestamp?: number) => {
       const time = timestamp || state.gameTime.gameTime;
       const date = new Date(time);
       return date.toLocaleTimeString('pt-BR', { 
@@ -214,7 +222,7 @@ export const usePoliceSystem = (caseId: string, investigatorName: string) => {
         second: '2-digit',
         hour12: false 
       });
-    }, [state.gameTime.gameTime]),
+    },
   };
 
   return { state, actions };
