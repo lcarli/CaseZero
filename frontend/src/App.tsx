@@ -11,7 +11,7 @@ import CaseDetailPage from './pages/CaseDetailPage';
 import InvestigationPage from './pages/InvestigationPage';
 import CaseInvestigationPage from './pages/CaseInvestigationPage';
 import TutorialPage from './pages/TutorialPage';
-import CasePage from './pages/CasePage';
+import PoliceSystemPage from './pages/PoliceSystemPage';
 import HomePage from './pages/HomePage';
 import GameTester from './components/GameTester';
 import './i18n';
@@ -87,7 +87,7 @@ const App: React.FC = () => {
               path="/cases/:caseId"
               element={
                 <ProtectedRoute>
-                  <CasePage />
+                  <PoliceSystemPage />
                 </ProtectedRoute>
               }
             />
