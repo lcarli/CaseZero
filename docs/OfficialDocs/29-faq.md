@@ -16,8 +16,12 @@ Este documento está atualmente em desenvolvimento e será atualizado em breve c
 
 ---
 
+
+[**Retornar ao índice**](./README.md)
+
+
+---
+
 **Status:** 🚧 Em Desenvolvimento  
 **Previsão de Conclusão:** Setembro 2025  
 **Última Atualização:** Agosto 2025
-
-[**Retornar ao índice**](./README.md)

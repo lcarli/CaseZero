@@ -1087,8 +1087,12 @@ Para usuários experientes, oferecemos tutoriais avançados:
 
 ---
 
+
+[**Retornar ao índice**](./README.md)
+
+
+---
+
 **Última atualização:** Agosto 2025  
 **Versão:** 1.0  
 **Próxima revisão:** Setembro 2025
-
-[**Retornar ao índice**](./README.md)
